@@ -58,6 +58,10 @@
       }
 
     </style>
+    <!-- Socket.io code  -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <!--Jquery code -->
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
   <body>
     <div style="display: none">
@@ -68,13 +72,14 @@
             placeholder="Enter a destination location">
 
         <div id="mode-selector" class="controls">
-          <input type="radio" name="type" id="changemode-walking" checked="checked">
+          <!-- Commented out to force driving directions  -->
+          <!-- <input type="radio" name="type" id="changemode-walking" >
           <label for="changemode-walking">Walking</label>
 
           <input type="radio" name="type" id="changemode-transit">
-          <label for="changemode-transit">Transit</label>
+          <label for="changemode-transit">Transit</label> -->
 
-          <input type="radio" name="type" id="changemode-driving">
+          <input type="radio" name="type" id="changemode-driving" checked="checked">
           <label for="changemode-driving">Driving</label>
         </div>
     </div>
@@ -122,8 +127,9 @@ function AutocompleteDirectionsHandler(map) {
   // Specify just the place data fields that you need.
   destinationAutocomplete.setFields(['place_id']);
 
-  this.setupClickListener('changemode-walking', 'WALKING');
-  this.setupClickListener('changemode-transit', 'TRANSIT');
+  // Commented out to force driving directions
+  // this.setupClickListener('changemode-walking', 'WALKING');
+  // this.setupClickListener('changemode-transit', 'TRANSIT');
   this.setupClickListener('changemode-driving', 'DRIVING');
 
   this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
@@ -175,6 +181,9 @@ AutocompleteDirectionsHandler.prototype.route = function() {
   }
   var me = this;
   var directionsObj = {
+    //The ObjectID here will allow us to make sure we can have a unique identifier to remove/edit these objects if need be
+    //Only will work if we allow 1 of every route? Otherwise we will need a different system.
+    //objectID: this.originPlaceId + this.destinationPlaceId,
     origin: {'placeId': this.originPlaceId},
     destination: {'placeId': this.destinationPlaceId},
     travelMode: this.travelMode
@@ -183,7 +192,11 @@ AutocompleteDirectionsHandler.prototype.route = function() {
   this.directionsService.route(
       directionsObj,
       function(response, status) {
-        console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode)
+        console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
+        //Here we want to send this object back to server in order for the server to save this route for later
+        var socket = io();
+        socket.emit("getMapObject", directionsObj);
+
         if (status === 'OK') {
           me.directionsDisplay.setDirections(response);
         } else {
