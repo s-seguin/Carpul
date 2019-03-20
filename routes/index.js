@@ -1,18 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var path = require('path');
+/*var path = require('path');
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000; */
 
 
-var htmlPath = path.join(__dirname);
+
+
+//var htmlPath = path.join(__dirname);
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
+/*
 app.get('/', function(req, res){
   app.use(express.static(htmlPath));
   res.sendFile('D:\\GitHub\\Carpul\\public\\index.html');
@@ -31,9 +32,10 @@ io.on('connection', function(socket){
 });
   });
 });
-
+*/
 module.exports = router;
-
+/*
 http.listen(port, function(){
   console.log('listening on *:' + port);
 });
+*/
