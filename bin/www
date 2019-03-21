@@ -25,14 +25,43 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-
+  var readline = require('readline');
+  var fs = require('fs');
   socket.on('getMapObject', function(directionsObj){
     console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
-    var fs = require('fs');
+
     fs.appendFile("routes\\SavedRoutes.JSON", JSON.stringify(directionsObj)+"\n", function(err) {
       if (err) {
           console.log(err);
       }
+    });
+    var testLine
+    socket.on('RequestEmbeddedMap', function(){
+
+      //Reads line by line async
+      // var lineReader = require('readline').createInterface({
+      //   input: require('fs').createReadStream('routes\\SavedRoutes.JSON')
+      // });
+      //
+      // lineReader.on('line', function (line) {
+      //   console.log('Line from file:', line);
+      //   testLine = line;
+      // });
+
+      //reads the entire file
+      var fileRead = fs.readFileSync('routes\\SavedRoutes.JSON', "utf8");
+      var fileLines = JSON.stringify(fileRead).split("\n");
+
+      //create embedded map object
+      //<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJsbMcSLd9cVMR-wPI46n0rzY&destination=place_id:ChIJP9RS1R1vcVMR0xEsnBKFn5I&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M" allowfullscreen></iframe>
+      console.log("Parse this Whole File: "+fileRead);
+      //***NOT READING A SINGLE ENTRY IN THE SPLIT ARRAY????****
+      console.log("Parse this Split: "+fileLines[0]);
+      //https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJsbMcSLd9cVMR-wPI46n0rzY&destination=place_id:ChIJP9RS1R1vcVMR0xEsnBKFn5I&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M
+
+      //This is where you would add the place_id for orgin and destination for the embedded map
+      var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:" + "" +"&destination=place_id:"+""+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
+      socket.emit('sendEmbeddedMap', embeddedMapString);
     });
   });
 });

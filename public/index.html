@@ -196,6 +196,7 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         //Here we want to send this object back to server in order for the server to save this route for later
         var socket = io();
         socket.emit("getMapObject", directionsObj);
+        socket.emit('RequestEmbeddedMap');
 
         if (status === 'OK') {
           me.directionsDisplay.setDirections(response);
@@ -208,5 +209,18 @@ AutocompleteDirectionsHandler.prototype.route = function() {
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"
         async defer></script>
+
+
+        <!-- Test Portion for Embedded Map -->
+        <iframe id='embeddedMap' width="600" height="450" frameborder="0" style="border:0" src="" allowfullscreen></iframe>
+        <script>
+        var socket = io();
+
+
+        socket.on("sendEmbeddedMap", function(embeddedMapString){
+          document.getElementById('embeddedMap').src = embeddedMapString;
+        });
+
+        </script>
   </body>
 </html>
