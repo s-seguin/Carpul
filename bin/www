@@ -27,7 +27,7 @@ function embeddedMapFunction(item, index){
   console.log("Print element at "+index+": " + item+"\n");
 
   //I think this should work because the place_id are a fixed length
-  //This basically works except for the first case. For some reason it is slightly longer than the other stringS?? 
+  //This basically works except for the first case. For some reason it is slightly longer than the other stringS??
   var origin = item.substring(27, 54);
   var destination = item.slice(89, 116);
   var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
@@ -53,26 +53,23 @@ io.on('connection', function(socket){
           console.log(err);
       }
     });
-    var testLine
-    socket.on('RequestEmbeddedMap', function(){
+    //reads the entire file
+    var fileRead = fs.readFileSync('routes\\SavedRoutes.JSON', "utf8");
+    var fileLines = JSON.stringify(fileRead).split("\\n");
 
-      //reads the entire file
-      var fileRead = fs.readFileSync('routes\\SavedRoutes.JSON', "utf8");
-      var fileLines = JSON.stringify(fileRead).split("\\n");
+    //create embedded map object
+    //<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJsbMcSLd9cVMR-wPI46n0rzY&destination=place_id:ChIJP9RS1R1vcVMR0xEsnBKFn5I&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M" allowfullscreen></iframe>
+    console.log("Parse this Whole File: "+fileRead);
+    //Now is split line by line. Need to extract elements for the embedded map
+    fileLines.forEach(embeddedMapFunction);
 
-      //create embedded map object
-      //<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJsbMcSLd9cVMR-wPI46n0rzY&destination=place_id:ChIJP9RS1R1vcVMR0xEsnBKFn5I&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M" allowfullscreen></iframe>
-      console.log("Parse this Whole File: "+fileRead);
-      //Now is split line by line. Need to extract elements for the embedded map
-      fileLines.forEach(embeddedMapFunction);
+    //console.log("Parse this Split: "+fileLines[0]);
+    //https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJsbMcSLd9cVMR-wPI46n0rzY&destination=place_id:ChIJP9RS1R1vcVMR0xEsnBKFn5I&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M
 
-      //console.log("Parse this Split: "+fileLines[0]);
-      //https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJsbMcSLd9cVMR-wPI46n0rzY&destination=place_id:ChIJP9RS1R1vcVMR0xEsnBKFn5I&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M
-
-      //This is where you would add the place_id for orgin and destination for the embedded map
-      // var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:" + "" +"&destination=place_id:"+""+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
-      // socket.emit('sendEmbeddedMap', embeddedMapString);
-    });
+    //This is where you would add the place_id for orgin and destination for the embedded map
+    // var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:" + "" +"&destination=place_id:"+""+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
+    console.log("sending: " + fileLines[0]);
+    socket.emit('sendEmbeddedMap', fileLines[0]);
   });
 });
 

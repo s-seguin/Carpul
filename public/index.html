@@ -58,11 +58,11 @@
       }
 
     </style>
-    <!-- Socket.io code  -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <!--Jquery code -->
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
+  <!-- Socket.io code  -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  <!--Jquery code -->
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <body>
     <div style="display: none">
         <input id="origin-input" class="controls" type="text"
@@ -196,16 +196,23 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         //Here we want to send this object back to server in order for the server to save this route for later
         var socket = io();
         socket.emit("getMapObject", directionsObj);
-        socket.emit('RequestEmbeddedMap');
 
         if (status === 'OK') {
           me.directionsDisplay.setDirections(response);
         } else {
           window.alert('Directions request failed due to ' + status);
         }
+
+        $(function()  {
+          console.log("init");
+          socket.on("sendEmbeddedMap", function(embeddedMapString){
+            console.log("Embedded map received: " + embeddedMapString);
+            document.getElementById('embeddedMap').src = embeddedMapString;
+          });
+        });
+
       });
 };
-
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"
         async defer></script>
@@ -213,14 +220,6 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
         <!-- Test Portion for Embedded Map -->
         <iframe id='embeddedMap' width="600" height="450" frameborder="0" style="border:0" src="" allowfullscreen></iframe>
-        <script>
-        var socket = io();
 
-
-        socket.on("sendEmbeddedMap", function(embeddedMapString){
-          document.getElementById('embeddedMap').src = embeddedMapString;
-        });
-
-        </script>
   </body>
 </html>
