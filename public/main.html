@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="topnav">
+        <a class="active" href="#explore">Explore</a>
+        <!-- <a href="#newRide" type="button" data-toggle="modal"
+            data-target="#newRideModal">New Ride</a> -->
+          <a href="index">New Ride</a>
+        <a href="#logout" type="button" data-toggle="modal"
+            data-target="#logoutModal">Logout</a>
+        <input type="text" placeholder="Search for a different ride..">
+      </div>
+      <h1>Destination: University of Calgary</h1>
+
+      <!-- Modal -->
+      <div id="newRideModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Post A New Ride</h4>
+            </div>
+            <div class="modal-body">
+              <p>This is where a new ride would be created.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Post Ride</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Modal -->
+      <div id="logoutModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Log Out Of Account</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you wish to log out?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Steve, 4 star</h3>
+            <h3>Departure: 10:20 am</h3>
+            <img src="route1.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Andrea, 5 star</h3>
+            <h3>Departure: 9:50 am</h3>
+            <img src="route1.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Adam, 5 star</h3>
+            <h3>Departure: 10:00 am</h3>
+            <img src="route1.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Steve, 4 star</h3>
+            <h3>Departure: 10:20 am</h3>
+            <img src="route2.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Steve, 4 star</h3>
+            <h3>Departure: 9:50 am</h3>
+            <img src="route2.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Adam, 5 star</h3>
+            <h3>Departure: 10:00 am</h3>
+            <img src="route2.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Steve, 4 star</h3>
+            <h3>Departure: 10:20 am</h3>
+            <img src="route3.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Steve, 4 star</h3>
+            <h3>Departure: 9:50 am</h3>
+            <img src="route3.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mr-2">
+            <h3>Driver: Adam, 5 star</h3>
+            <h3>Departure: 10:00 am</h3>
+            <img src="route3.PNG" class="img-responsive" width="100%">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
