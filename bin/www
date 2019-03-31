@@ -53,7 +53,7 @@ var io = require('socket.io')(server);
 io.on('connection', function(socket){
   var readline = require('readline');
   var fs = require('fs');
-  socket.on('getMapObject', function(directionsObj){
+  socket.on('sendNewMapToServer', function(directionsObj){
     console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
 
     fs.appendFileSync("routes\\SavedRoutes.JSON", JSON.stringify(directionsObj)+"\n", function(err) {
@@ -82,6 +82,13 @@ io.on('connection', function(socket){
     console.log("sending: " + mapLinks[0]);
     socket.emit('sendEmbeddedMap', mapLinks[0]);
   });
+  socket.on('getMapsFromServer', function(){
+    console.log("Senfing all the maps to the client");
+    var mapFile = fs.readFileSync('routes\\embeddedMaps.txt', "utf8");
+    //Turns each link into an element of an array
+    var mapLinks = mapFile.split("\n");
+    socket.emit('sendMapsToClient', mapLinks);
+  })
 });
 
 

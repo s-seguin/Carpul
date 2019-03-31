@@ -196,7 +196,7 @@ AutocompleteDirectionsHandler.prototype.route = function() {
         console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
         //Here we want to send this object back to server in order for the server to save this route for later
         var socket = io();
-        socket.emit("getMapObject", directionsObj);
+        socket.emit("sendNewMapToServer", directionsObj);
 
         if (status === 'OK') {
           me.directionsDisplay.setDirections(response);
