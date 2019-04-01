@@ -7,8 +7,34 @@
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
+      #map, #ride-details {
+          height: 50%;
+          padding: 0;
+          display: inline-flex;
+      }
+
       #map {
-        height: 50%;
+          width: 70%;
+      }
+
+      #ride-details {
+          width: 29%;
+      }
+
+      div.selector-images {
+          position: absolute;
+          width: 29%;
+          padding-top: 20px;
+          text-align: center;
+      }
+
+      img.ride-selector {
+          width: 25%;
+          height: 50px;
+          padding: 10px;
+          margin: 5px;
+          background: #e9e9e9;
+          border-radius: 20px;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -36,7 +62,7 @@
         margin-left: 12px;
         padding: 0 11px 0 13px;
         text-overflow: ellipsis;
-        width: 200px;
+        width: 25%;
       }
 
       #origin-input:focus,
@@ -84,8 +110,19 @@
         </div>
     </div>
 
-    <div id="map"></div>
+    <div id="ride-details">
+        <div class="selector-images" >
+            <img class="ride-selector" src="images/passenger.png" alt="Passenger">
+            <img class="ride-selector" src="images/car.png" alt="Driver">
+        </div>
 
+    </div>
+
+    <div id="map"></div>
+    <footer >
+        <span>Icon made by <a title="Freepik" href="http://www.freepik.com">Freepik</a> from <a title="Flaticon" href="http://www.flaticon.com">www.flaticon.com</a>&nbsp;</span>
+        <div>Icon made by <a href="https://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> </div>
+    </footer>
     <script>
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
@@ -139,7 +176,7 @@ function AutocompleteDirectionsHandler(map) {
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
       destinationInput);
-  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+  //this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
 }
 
 // Sets a listener on a radio button to change the filter type on Places
