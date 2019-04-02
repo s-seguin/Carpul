@@ -8,13 +8,17 @@
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map, #ride-details {
-          height: 50%;
+          height: 75%;
           padding: 0;
           display: inline-table;
       }
 
       #map {
           width: 70%;
+      }
+
+      #details-header {
+          margin-left: 12px;
       }
 
       #ride-details {
@@ -32,8 +36,9 @@
 
       img.ride-selector {
           width: 25%;
-          max-width: 150px;
           height: 50px;
+          max-width: 100px;
+          max-height: 100px;
           padding: 10px;
           margin: 25px 15px 35px 15px;
           background: lightskyblue;
@@ -90,10 +95,10 @@
         font-family: Roboto, sans-serif;
         font-size: 15px;
         font-weight: 300;
-        margin-left: 12px;
+        margin-left: 10%;
         padding: 0 11px 0 13px;
         text-overflow: ellipsis;
-        width: 25%;
+        width: 80%;
       }
 
       .single-digit {
@@ -126,11 +131,6 @@
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <body>
     <div style="display: none">
-        <input id="origin-input" class="controls" type="text"
-            placeholder="Enter an origin location">
-
-        <input id="destination-input" class="controls" type="text"
-            placeholder="Enter a destination location">
 
         <div id="mode-selector" class="controls">
           <!-- Commented out to force driving directions  -->
@@ -146,10 +146,15 @@
     </div>
 
     <div id="ride-details">
-        <h2>Ride Details</h2>
+        <h2 id="details-header">Ride Details</h2>
+        <input id="origin-input" class="controls" type="text"
+               placeholder="Enter an origin location">
+
+        <input id="destination-input" class="controls" type="text"
+               placeholder="Enter a destination location">
         <div class="ride-detail-element selector-images" >
-            <img class="ride-selector selected-role" src="images/passenger.png" alt="Passenger">
-            <img class="ride-selector" src="images/car.png" alt="Driver">
+            <img class="ride-selector selected-role" src="images/passenger.png" alt="Passenger" onclick="switchSelectedRole()">
+            <img class="ride-selector" src="images/car.png" alt="Driver" onclick="switchSelectedRole()">
         </div>
         <span id="group-size" class="ride-detail-element detail-span"> Group size: <input class="single-digit" type="text" pattern="\d*" maxlength="1" size="1"></span>
         <span class="ride-detail-element detail-span"> Departure time: <input class="single-digit" type="time"></span>
@@ -193,6 +198,7 @@ function AutocompleteDirectionsHandler(map) {
   this.directionsDisplay = new google.maps.DirectionsRenderer;
   this.directionsDisplay.setMap(map);
 
+  var rideDetails = document.getElementById('ride-details');
   var originInput = document.getElementById('origin-input');
   var destinationInput = document.getElementById('destination-input');
   var modeSelector = document.getElementById('mode-selector');
@@ -214,6 +220,7 @@ function AutocompleteDirectionsHandler(map) {
   this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
   this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
 
+    this.rideDetails.push(originInput);
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
   this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(
       destinationInput);
@@ -292,6 +299,11 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
       });
 };
+
+
+function switchSelectedRole() {
+
+}
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"
         async defer></script>
