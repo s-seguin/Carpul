@@ -11,6 +11,7 @@ var port = process.env.PORT || 3000; */
 //var htmlPath = path.join(__dirname);
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  console.log('index.js get');
   res.render('index', { title: 'Express' });
 });
 /*

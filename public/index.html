@@ -124,6 +124,7 @@
         <div>Icon made by <a href="https://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> </div>
     </footer>
     <script>
+    var socket = io();
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script
@@ -232,7 +233,6 @@ AutocompleteDirectionsHandler.prototype.route = function() {
       function(response, status) {
         console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
         //Here we want to send this object back to server in order for the server to save this route for later
-        var socket = io();
         socket.emit("sendNewMapToServer", directionsObj);
 
         if (status === 'OK') {
