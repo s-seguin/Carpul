@@ -12,7 +12,8 @@ var port = process.env.PORT || 3000; */
 /* GET home page. */
 router.get('/', function(req, res, next) {
   console.log('index.js get');
-  res.render('index', { title: 'Express' });
+  console.log(req.cookies)
+  res.render('../public/index.html', {title: 'Noodles.js' });
 });
 /*
 app.get('/', function(req, res){
