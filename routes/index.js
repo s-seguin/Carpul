@@ -24,8 +24,10 @@ router.get('/', function(req, res, next) {
     res.cookie('Carpul', savedUsername);
     console.log("creating cookie " + savedUsername);
   }
-  console.log(req.cookies)
-  res.render('../public/index.html', {title: 'Noodles.js' });
+  //socket ID is useless to us here because it is their PREVIOUS id
+  // and as soon as they go to www code they will be assigened a new socket id.
+  console.log(req.cookies); 
+  res.render('../public/index.html', {title: 'Noodles.js', name: savedUsername});
 });
 /*
 app.get('/', function(req, res){

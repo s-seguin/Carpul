@@ -51,8 +51,10 @@ function embeddedMapFunction(item, index){
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
+  console.log(socket.id);
   var readline = require('readline');
   var fs = require('fs');
+
   socket.on('sendNewMapToServer', function(directionsObj){
     console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
 
@@ -88,7 +90,22 @@ io.on('connection', function(socket){
     //Turns each link into an element of an array
     var mapLinks = mapFile.split("\n");
     socket.emit('sendMapsToClient', mapLinks);
-  })
+  });
+  socket.on('register', function(data){
+    console.log('Register event: (' + data.name + ',' + data.id + ')' );
+    console.log('Are the IDs equal?' + Boolean(data.id === socket.id));
+    socket.username = data.name;
+    console.log(socket.username);
+  });
+  /*---------------
+  Ping temp code
+  -----------------*/
+  socket.on('pingTo', function(name){
+    socket.broadcast.emit('pinged', name);
+  });
+  /*---------------
+  Ping temp code End
+  -----------------*/
 });
 
 

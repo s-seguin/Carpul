@@ -120,11 +120,38 @@
 
     <div id="map"></div>
     <footer >
+        <p>Debugging, User is <%= name %></p>
+        <form action="">
+          TO:<input id="to" autocomplete="off" /><button>Send</button>
+        </form>
+
         <span>Icon made by <a title="Freepik" href="http://www.freepik.com">Freepik</a> from <a title="Flaticon" href="http://www.flaticon.com">www.flaticon.com</a>&nbsp;</span>
         <div>Icon made by <a href="https://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> </div>
     </footer>
     <script>
     var socket = io();
+    socket.on('connect', function(){
+      console.log('<%= name %> is connected and has id ' + socket.id);
+      socket.emit('register', {name: '<%= name %>', id: socket.id});
+    });
+    /*---------------
+    Ping temp code
+    -----------------*/
+    $('form').submit(function(e){
+			e.preventDefault(); // prevents page reloading
+			socket.emit('pingTo', $('#to').val());
+      console.log('Sent to '+ $('#to').val());
+			$('#m').val('');
+			return false;
+		});
+    socket.on('pinged', function(name){
+      if(name == '<%= name %>'){
+          console.log("you been pinged");
+      }
+    })
+    /*---------------
+    Ping temp code
+    -----------------*/
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script
