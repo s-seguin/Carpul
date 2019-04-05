@@ -15,8 +15,8 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
 
-var pgDbConn = require('./config/database.js');
-//require('./config/passport')(passport);
+// pgDbConn = require('./config/database.js');
+require('./config/passport')(passport);
 
 
 app.use(logger('dev'));
@@ -43,10 +43,10 @@ app.use(passport.session()); //Login sessions
 app.use(flash()); //For 'Flashing' messages back to client
 
 ///ROUTES
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
+app.use('/', indexRouter(passport));
+app.use('/users', usersRouter(passport));
+app.use('/login', loginRouter(passport));
+app.use('/register', registerRouter(passport));
 
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -11,11 +11,10 @@ const queryStr = 'SELECT * from account;';
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  console.log("Users.js get");
-  res.send('respond with a resource');
+router.get('/', isLoggedIn, function(req, res, next) {
+  res.send("Users Page.... it looks like you've been logged in succesfully");
 
-  query2();
+
 });
 
 function query() {
@@ -33,10 +32,27 @@ function query() {
 async function query2() {
   console.log("query2");
   await client.connect();
-  let res = await client.query(queryStr);
+  var res = await client.query(queryStr);
   res.rows.forEach(row=>{
     console.log(row);
   });
   await client.end();
+
+  return res;
 }
-module.exports = router;
+
+////TESTING --> this
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+  // if user is authenticated in the session, carry on
+  if (req.isAuthenticated())
+    return next();
+
+  // if they aren't redirect them to the home page
+  res.redirect('/login');
+}
+
+module.exports = function (passport){
+  return router;
+};

@@ -41,4 +41,6 @@ async function query2() {
     });
     await client.end();
 }
-module.exports = router;
+module.exports = function(passport) {
+    return router;
+};
