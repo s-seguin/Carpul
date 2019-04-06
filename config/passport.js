@@ -43,7 +43,7 @@ module.exports = function (passport) {
                         if (res && res.rowCount > 0) {
                             if (!err) {
                                 res.rows.forEach((item) => console.log(item));
-                                console.log("RESULT::::" + res.rows[0]);
+                                //console.log("RESULT::::" + res.rows[0]);
                                 return (checkPasswordMatches(res.rows[0])); //there should only be one match
                             } else {
                                 console.log(err.stack);
@@ -68,5 +68,64 @@ module.exports = function (passport) {
 
         )
     );
+
+    passport.use(
+        'local-register',
+        new LocalStrategy(
+        {
+            usernameField: 'email',
+            passwordField: 'password',
+            passReqToCallback : true
+
+        },
+
+        function (req, email, password, done) {
+            //check if the passwords match
+            if (password == req.body.confirmPassword && password != "" && email != "") {
+                //check if the user already exists in the database
+                dbClient.query(
+                    "SELECT * FROM account WHERE EMAIL= $1", [email],
+                    (err, res) => {
+                        if (res) {
+                            if (res.rowCount > 0) {
+                                console.log("[Register] That username has already been take. " + email);
+                                return done(null, false, req.flash("register", "Sorry that user name has already been taken."));
+                            } else {
+                                dbClient.query(
+                                    "INSERT INTO account(password, email, created_on, last_login) VALUES ($1, $2, Now(), Now());",
+                                    [password, email],
+                                    (err, res) => {
+                                        if (res) {
+                                            console.log(res);
+                                            var user = {
+                                                email: email,
+                                                password: password
+                                            };
+                                            console.log("User: " + JSON.stringify(user));
+                                            return done(null, user);
+                                        } else {
+                                            console.log("There was an error inserting user into database");
+                                            done(err);
+                                        }
+
+
+                                    }
+                                )
+                            }
+                        } else if (err) {
+                            done(err);
+                        }
+                    }
+                );
+
+
+            } else {
+                console.log("[Register] Passwords do not match");
+                return done(null, false, req.flash("register", "Passwords do not match."));
+
+            }
+        }
+    )
+    )
 
 };
