@@ -7,6 +7,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var registerRouter = require('./routes/register');
+var logoutRouter = require('./routes/logout');
 
 var app = express();
 
@@ -47,6 +48,7 @@ app.use('/', indexRouter(passport));
 app.use('/users', usersRouter(passport));
 app.use('/login', loginRouter(passport));
 app.use('/register', registerRouter(passport));
+app.use('/logout', logoutRouter(passport));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
