@@ -22,27 +22,56 @@
         <% } %>
 
         <!-- LOGIN FORM -->
-        <form action="/register" method="post">
+        <form class="form-horizontal" action="/register" method="post">
             <div class="form-group">
-                <label>Email</label>
-                <input type="text" class="form-control" name="email">
+                <label for="email" class="control-label col-sm-4">Email:</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" name="email">
+                </div>
             </div>
             <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" name="password" onchange="passwordsMatch()">
+            <label for="password" class="control-label col-sm-4">Password:</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" name="password" onchange="passwordsMatch()">
+                </div>
             </div>
             <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" class="form-control" name="confirmPassword" onchange="passwordsMatch()">
+                <label for="confirmPassword" class="control-label col-sm-4">Confirm Password:</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" name="confirmPassword" onchange="passwordsMatch()">
+                </div>
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <label for="fname" class="control-label col-sm-4">First name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="fname">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lname" class="control-label col-sm-4">Last name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="lname">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="control-label col-sm-4">Phone number:</label>
+                <div class="col-sm-8">
+                    <input type="tel" class="form-control" name="phone">
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+            <div class="text-right">
+                <a href="/" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-lg">Register</button>
+            </div>
+
         </form>
 
         <hr>
 
         <p>Already have an account? <a href="/login">Login</a></p>
-        <p>Or go <a href="/">home</a>.</p>
 
     </div>
 

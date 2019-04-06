@@ -81,7 +81,15 @@ module.exports = function (passport) {
 
         function (req, email, password, done) {
             //check if the passwords match
-            if (password == req.body.confirmPassword && password != "" && email != "") {
+            var additionalData = [req.body.confirmPassword, req.body.fname, req.body.lname, req.body.phone];
+
+            for (i in additionalData) {
+                console.log(" data: " + additionalData[i]);
+                if (additionalData[i] == "" || additionalData[i] == undefined)
+                    return done(null, false, req.flash("register", "Something was left blank. All fields are mandatory."));
+            }
+
+            if (password == additionalData[0]) {
                 //check if the user already exists in the database
                 dbClient.query(
                     "SELECT * FROM account WHERE EMAIL= $1", [email],
@@ -92,8 +100,8 @@ module.exports = function (passport) {
                                 return done(null, false, req.flash("register", "Sorry that user name has already been taken."));
                             } else {
                                 dbClient.query(
-                                    "INSERT INTO account(password, email, created_on, last_login) VALUES ($1, $2, Now(), Now());",
-                                    [password, email],
+                                    "INSERT INTO account(email, password, fname, lname, phone, created_on, last_login) VALUES ($1, $2, $3, $4, $5, Now(), Now());",
+                                    [password, email, additionalData[1], additionalData[2], additionalData[3]],
                                     (err, res) => {
                                         if (res) {
                                             console.log(res);
