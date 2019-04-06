@@ -101,13 +101,16 @@ module.exports = function (passport) {
                             } else {
                                 dbClient.query(
                                     "INSERT INTO account(email, password, fname, lname, phone, created_on, last_login) VALUES ($1, $2, $3, $4, $5, Now(), Now());",
-                                    [password, email, additionalData[1], additionalData[2], additionalData[3]],
+                                    [email, password, additionalData[1], additionalData[2], additionalData[3]],
                                     (err, res) => {
                                         if (res) {
                                             console.log(res);
                                             var user = {
                                                 email: email,
-                                                password: password
+                                                password: password,
+                                                fname: additionalData[1],
+                                                lname: additionalData[2],
+                                                phone: additionalData[3]
                                             };
                                             console.log("User: " + JSON.stringify(user));
                                             return done(null, user);
