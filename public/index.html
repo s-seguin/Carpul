@@ -131,7 +131,7 @@
     <script>
     var socket = io();
     socket.on('connect', function(){
-      console.log('<%= name %> is connected and has id ' + socket.id);
+      console.log('<%= name %> is connected and has Socket id ' + socket.id);
       socket.emit('register', {name: '<%= name %>', id: socket.id});
     });
     /*---------------
@@ -270,9 +270,14 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
         $(function()  {
           console.log("init");
-          socket.on("sendEmbeddedMap", function(embeddedMapString){
-            console.log("Embedded map received: " + embeddedMapString);
-            document.getElementById('embeddedMap').src = embeddedMapString;
+          socket.on("sendEmbeddedMap", function(rideObj){
+            console.log("Embedded map received: " + rideObj.embeddedMapString);
+            document.getElementById('embeddedMap').src = rideObj.embeddedMapString;
+            var expDate = new Date(rideObj.expire);
+            console.log(expDate);
+            $('#driverString').text(rideObj.driver + ' is leaving at '
+            + expDate.getHours() + ":" + expDate.getMinutes()
+            + ' And has ' + rideObj.capacity + ' seats left');
           });
         });
 
@@ -284,6 +289,7 @@ AutocompleteDirectionsHandler.prototype.route = function() {
 
 
         <!-- Test Portion for Embedded Map -->
+        <h2 id="driverString">test</h2>
         <iframe id='embeddedMap' width="600" height="450" frameborder="0" style="border:0" src="" allowfullscreen></iframe>
 
   </body>

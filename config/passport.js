@@ -21,6 +21,7 @@ if (dbConn.ssl == "true") {
 
 
 dbClient.connect();
+console.log('[DB]  connected');
 
 
 module.exports = function (passport) {
