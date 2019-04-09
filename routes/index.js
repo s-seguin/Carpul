@@ -15,7 +15,7 @@ var port = process.env.PORT || 3000; */
 /* GET home page. */
 var savedUsername = null;
 
-router.get('/index', isLoggedIn, function(req, res, next) {
+router.get('/main', isLoggedIn, function(req, res, next) {
   res.redirect('/');
 
 });
@@ -30,7 +30,7 @@ router.get('/', isLoggedIn, function(req, res, next) {
   // and as soon as they go to www code they will be assigened a new socket id.
   console.log(req.cookies);
   console.log(req.user);
-  res.render('../public/index.html', {title: 'Noodles.js', name: savedUsername});
+  res.render('../public/main.html', {title: 'Noodles.js', name: savedUsername});
 });
 
 ////TESTING --> this

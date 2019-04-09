@@ -1,3 +1,3 @@
 function passwordsMatch() {
-    console.log("Do passwords mathc?");
+    console.log("Do passwords match?");
 }
