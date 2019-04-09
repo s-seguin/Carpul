@@ -37,6 +37,122 @@
   font-size: 17px;
 }
 
+#post-ride-modal {
+  width: 75%;
+}
+
+#post-ride-body {
+  width: 100%;
+}
+
+#map, #ride-details {
+  height: 600px;
+  padding: 0;
+  /*display: inline-table;*/
+}
+
+#details-header {
+  margin-left: 12px;
+}
+
+#ride-details {
+  background-color: #e9e9e9;
+}
+
+#driver-form-elements {
+  text-align: center;
+}
+
+#group-size {
+  text-align: left;
+}
+
+.ride-detail-element {
+  display: table-row;
+  text-align: left;
+}
+
+div.selector-images {
+  text-align: center;
+}
+
+img.ride-selector {
+  width: 25%;
+  height: 25%;
+  max-width: 150px;
+  max-height: 150px;
+  padding: 10px;
+  margin: 25px 15px 35px 15px;
+  background: lightskyblue;
+  border-radius: 20px;
+}
+
+.search {
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  left: 0;
+  bottom: 0;
+  background-color: lightskyblue;
+}
+
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#origin-input,
+#destination-input {
+  background-color: #fff;
+  font-family: Roboto, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 10%;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 80%;
+}
+
+#group-size, #driver-form-elements {
+  display: none;
+  width: 60%;
+  margin-left: 20%;
+}
+
+.single-digit {
+  float: right;
+}
+
+#origin-input:focus,
+#destination-input:focus {
+  border-color: #4d90fe;
+}
+
+#mode-selector {
+  color: #fff;
+  background-color: #4d90fe;
+  margin-left: 12px;
+  padding: 5px 11px 0 11px;
+}
+
+#mode-selector label {
+  font-family: Roboto;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.pac-container {
+  z-index: 10000 !important;
+}
+
+
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {
   .topnav a, .topnav input[type=text] {
