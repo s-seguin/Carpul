@@ -8,7 +8,7 @@
         /* Always set the map height explicitly to define the size of the div
          * element that contains the map. */
         #map, #ride-details {
-            height: 75%;
+            height: 25%;
             padding: 0;
             display: inline-table;
         }
@@ -55,13 +55,14 @@
             height: 50px;
             width: 60%;
             text-align: left;
-            padding-left: 20%;
-            padding-right: 20%;
+            padding-left: 40%;
+            padding-right: 40%;
         }
 
         .search {
             height: 50px;
             position: absolute;
+            left: 0;
             bottom: 0;
             background-color: lightskyblue;
         }
@@ -98,7 +99,7 @@
         }
 
         #group-size, #driver-form-elements {
-
+            display: none;
         }
 
         .single-digit {
@@ -323,10 +324,10 @@
                 $(function () {
                     console.log("init");
                     socket.on("sendEmbeddedMap", function (embeddedMapString) {
-                        console.log("Embedded map received: " + embeddedMapString);
-                        document.getElementById('embeddedMap').src = embeddedMapString;
-                    });
+                    console.log("Embedded map received: " + embeddedMapString);
+                    document.getElementById('embeddedMap').src = embeddedMapString;
                 });
+            });
 
             });
     };
