@@ -1,6 +1,11 @@
+var socket = io();
+socket.on('connect', function(){
+  console.log(name + ' is connected and has Socket id ' + socket.id);
+  socket.emit('register', {name: name, id: socket.id});
+});
+
 $(function()  {
   console.log('init');
-  var socket = io();
   socket.emit('getMapsFromServer');
   socket.on('sendMapsToClient', function(maps){
     i=0;
@@ -152,7 +157,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
           function (response, status) {
             console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
             //Here we want to send this object back to server in order for the server to save this route for later
-            var socket = io();
             socket.emit("sendNewMapToServer", directionsObj);
 
             if (status === 'OK') {

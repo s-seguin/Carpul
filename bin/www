@@ -52,7 +52,7 @@ function embeddedMapFunction(item, index){
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-  console.log(socket.id);
+  console.log("New Connection from " + socket.id);
   var readline = require('readline');
   var fs = require('fs');
 
@@ -78,8 +78,7 @@ io.on('connection', function(socket){
     socket.emit('sendMapsToClient', mapLinks);
   });
   socket.on('register', function(data){
-    console.log('Register event: (' + data.name + ',' + data.id + ')' );
-    console.log('Are the IDs equal?' + Boolean(data.id === socket.id));
+    console.log('Register event: ' + data.id + " is " + data.name);
     socket.username = data.name;
     console.log(socket.username);
   });
