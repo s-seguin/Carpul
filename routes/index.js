@@ -30,7 +30,7 @@ router.get('/', isLoggedIn, function(req, res, next) {
   // and as soon as they go to www code they will be assigened a new socket id.
   console.log(req.cookies);
   console.log(req.user);
-  res.render('../public/main.html', {title: 'Noodles.js', name: savedUsername});
+  res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone });
 });
 
 ////TESTING --> this

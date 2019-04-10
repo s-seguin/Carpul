@@ -8,9 +8,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Socket.io library  -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <!--We need to initialize the variable passsed in for EJS before we load our src'd js script file -->
+    <!--We need to initialize the variables passed in for EJS before we load our src'd js script file -->
     <script type="text/javascript">
-      var name = '<%= name %>';
+      var name = '<%= name %>'; //init var for main.js
+      console.log('<%= email  %> <%= lname %> <%= phone %>'); //log ejs values for debggerino
     </script>
     <!-- Latest compiled JavaScript -->
     <script type="text/javascript" src="javascripts/main.js"></script>
@@ -134,11 +135,11 @@
               <div class="row">
                 <div class="col-sm-4" id="user-page-details">
                   <!-- This is where we could insert their account information  -->
-                  <span class="account-info" id="user-page-email"> Email: <input class="account-info-box" type="text" name="account-info-email" disabled></span>
+                  <span class="account-info" id="user-page-email"> Email: <input class="account-info-box" type="text" name="account-info-email" value="<%= email  %>" disabled></span>
                   <span class="account-info" id="user-page-password"> Password: <input class="account-info-box" type="password" name="account-info-password" disabled></span>
-                  <span class="account-info" id="user-page-fname"> First Name: <input class="account-info-box" type="text" name="account-info-fname" disabled></span>
-                  <span class="account-info" id="user-page-lname"> Last Name: <input class="account-info-box" type="text" name="account-info-lname" disabled></span>
-                  <span class="account-info" id="user-page-phone"> Phone Number: <input class="account-info-box" type="tel" name="account-info-phone" disabled></span>
+                  <span class="account-info" id="user-page-fname"> First Name: <input class="account-info-box" type="text" name="account-info-fname" value="<%= name  %>"disabled></span>
+                  <span class="account-info" id="user-page-lname"> Last Name: <input class="account-info-box" type="text" name="account-info-lname" value="<%= lname  %>"disabled></span>
+                  <span class="account-info" id="user-page-phone"> Phone Number: <input class="account-info-box" type="tel" name="account-info-phone" value="<%= phone  %>"disabled></span>
                 </div>
               </div>
             </div>
