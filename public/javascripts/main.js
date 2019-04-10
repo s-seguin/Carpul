@@ -5,7 +5,7 @@ socket.on('connect', function(){
 });
 
 $(function()  {
-  console.log('init');
+  console.log('init. Getting maps from server');
   socket.emit('getMapsFromServer');
   socket.on('sendMapsToClient', function(maps){
     i=0;
@@ -13,6 +13,15 @@ $(function()  {
       $(this).attr('src', maps[i]);
       i++;
     })
+  });
+  socket.on("sendEmbeddedMap", function (rideObj) {
+    console.log("Embedded map received: " + rideObj.embeddedMapString);
+    $('#testMap iframe').attr('src', rideObj.embeddedMapString);
+    var expDate = new Date(rideObj.expire);
+    console.log(expDate);
+    $('#testMap h3').text('Driver: ' + rideObj.driver + ' 0 Stars');
+    $('#testMap h3:last').text('Departure: ' + expDate.getHours() + ":" + expDate.getMinutes()
+    + ' with ' + rideObj.capacity + ' seats left');
   });
 });
 
@@ -164,14 +173,6 @@ AutocompleteDirectionsHandler.prototype.route = function () {
             } else {
               window.alert('Directions request failed due to ' + status);
             }
-
-            $(function () {
-              console.log("init");
-              socket.on("sendEmbeddedMap", function (embeddedMapString) {
-                console.log("Embedded map received: " + embeddedMapString);
-                document.getElementById('embeddedMap').src = embeddedMapString;
-              });
-            });
-
+              console.log("Waiting for map from server");
           })
 };

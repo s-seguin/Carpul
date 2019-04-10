@@ -66,7 +66,8 @@ io.on('connection', function(socket){
     rideObj.capacity = 4 ///Setting Defulat capacity value
     rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+directionsObj.origin.placeId+"&destination=place_id:"+directionsObj.destination.placeId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
     rideObj.directionsObj = directionsObj; //sending theh whole thing cause why not
-    //Serve the first map to the client for now
+    //Send this map right back to the client
+    //// TODO: Insert this into the database
     console.log("sending: " + JSON.stringify(rideObj) );
     socket.emit('sendEmbeddedMap', rideObj);
   });
