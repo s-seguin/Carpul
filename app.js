@@ -3,21 +3,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var loginRouter = require('./routes/login');
-var registerRouter = require('./routes/register');
-var logoutRouter = require('./routes/logout');
+
 
 var app = express();
 
-var pg = require('pg');
-var flash = require('connect-flash');
-var session = require('express-session');
-var passport = require('passport');
 
-// pgDbConn = require('./config/database.js');
-require('./config/passport')(passport);
+
 
 
 app.use(logger('dev'));
@@ -30,25 +21,9 @@ app.engine('html', require('ejs').renderFile);
 //app.set('view engine', 'html');
 
 
-//Passport config stuff
-app.use(session({
-    secret: 'somerandomsecrethash',
-    resave: true,
-    saveUninitialized: true,
-    cookie:{
-        expires: false
-    }
-})); //Set default values
-app.use(passport.initialize());
-app.use(passport.session()); //Login sessions
-app.use(flash()); //For 'Flashing' messages back to client
 
-///ROUTES
-app.use('/', indexRouter(passport));
-app.use('/users', usersRouter(passport));
-app.use('/login', loginRouter(passport));
-app.use('/register', registerRouter(passport));
-app.use('/logout', logoutRouter(passport));
+
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 

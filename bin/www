@@ -22,77 +22,41 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+var indexRouter = require('../routes/index');
+var usersRouter = require('../routes/users');
+var loginRouter = require('../routes/login');
+var registerRouter = require('../routes/register');
+var logoutRouter = require('../routes/logout');
 
-///We could likely delete this embeddedMapFunction function
-function embeddedMapFunction(item, index){
-  //Don't process line if empty or fucked
-  if (item.length > 2) {
 
-    console.log("Print element at "+index+": " + item);
-    //Turn line into object
-    var obj = JSON.parse(item);
-    console.log("JSON: " + JSON.stringify(obj));
+var passport = require('passport');
+var pg = require('pg');
+var flash = require('connect-flash');
+var session = require('express-session');
 
-    //I think this should work because the place_id are a fixed length
-    //This basically works except for the first case. For some reason it is slightly longer than the other stringS??
-    var origin = obj.origin.placeId;
-    var destination = obj.destination.placeId;
-    console.log("origin: " + origin);
-    var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
+// pgDbConn = require('./config/database.js');
+require('../config/passport')(passport);
 
-    var fs = require('fs');
-    fs.appendFile("routes\\embeddedMaps.txt", embeddedMapString+"\n", function(err) {
-      if (err) {
-          console.log(err);
-      }
-    });
+//Passport config stuff
+app.use(session({
+  secret: 'somerandomsecrethash',
+  resave: true,
+  saveUninitialized: true,
+  cookie:{
+    expires: false
   }
-}
+})); //Set default values
+app.use(passport.initialize());
+app.use(passport.session()); //Login sessions
+app.use(flash()); //For 'Flashing' messages back to client
 
-var io = require('socket.io')(server);
+///ROUTES
+app.use('/', indexRouter(passport, server));
+app.use('/users', usersRouter(passport));
+app.use('/login', loginRouter(passport));
+app.use('/register', registerRouter(passport));
+app.use('/logout', logoutRouter(passport));
 
-io.on('connection', function(socket){
-  console.log("New Connection from " + socket.id);
-  var readline = require('readline');
-  var fs = require('fs');
-
-  socket.on('sendNewMapToServer', function(directionsObj){
-    console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
-    var rideObj = new Object();
-    rideObj.driver = socket.username; //value got from register
-    var postTime = new Date();
-    rideObj.expire = new Date(postTime.getTime() + (1*60*60*1000));
-    console.log('Ride posted @ ' + postTime.getHours() + ':' + postTime.getMinutes() +'. Will expire @' +rideObj.expire.getHours() + ':' + rideObj.expire.getMinutes());
-    rideObj.capacity = 4 ///Setting Defulat capacity value
-    rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+directionsObj.origin.placeId+"&destination=place_id:"+directionsObj.destination.placeId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
-    rideObj.directionsObj = directionsObj; //sending theh whole thing cause why not
-    //Send this map right back to the client
-    //// TODO: Insert this into the database
-    console.log("sending: " + JSON.stringify(rideObj) );
-    socket.emit('sendEmbeddedMap', rideObj);
-  });
-  socket.on('getMapsFromServer', function(){
-    console.log("Sending all the maps to the client");
-    var mapFile = fs.readFileSync('routes/embeddedMaps.txt', "utf8");
-    //Turns each link into an element of an array
-    var mapLinks = mapFile.split("\n");
-    socket.emit('sendMapsToClient', mapLinks);
-  });
-  socket.on('register', function(data){
-    console.log('Register event: ' + data.id + " is " + data.name);
-    socket.username = data.name;
-    console.log(socket.username);
-  });
-  /*---------------
-  Ping temp code
-  -----------------*/
-  socket.on('pingTo', function(name){
-    socket.broadcast.emit('pinged', name);
-  });
-  /*---------------
-  Ping temp code End
-  -----------------*/
-});
 
 
 /**
