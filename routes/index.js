@@ -67,14 +67,11 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
-
 module.exports = function(passport, server) {
-
   var savedUsername = null;
 
   router.get('/main', isLoggedIn, function(req, res, next) {
     res.redirect('/');
-
   });
 
   router.get('/', isLoggedIn, function(req, res, next) {
@@ -165,12 +162,5 @@ module.exports = function(passport, server) {
     -----------------*/
   });
 
-
   return router;
 };
-
-
-
-
-
-
