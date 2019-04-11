@@ -26,10 +26,23 @@
             data-target="#newRideModal">New Ride</a>
         <a href="#currentRide" type="button" data-toggle="modal"
             data-target="#currentRideModal">Current Ride</a>
-        <a href="#userPage" type="button" data-toggle="modal"
-            data-target="#userPageModal">My Account</a>
-        <a href="#logout" type="button" data-toggle="modal"
-            data-target="#logoutModal">Logout</a>
+        <a id="notifications">
+            <img src="images/bell.png">
+        </a>
+        <!-- <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="images/bell.png">
+          </button>
+          <div class="dropdown-menu" aria-labelledby="notifications">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </div> -->
+        <a href="#userPage" id="account" type="button" data-toggle="modal"
+            data-target="#userPageModal">
+            <img src="images/user.png">
+        </a>
         <input type="text" placeholder="Search for a different ride..">
       </div>
       <h1>Destination: University of Calgary</h1>
@@ -95,6 +108,40 @@
 
         </div>
       </div>
+
+      <!-- Modal -->
+      <div id="userPageModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" id="user-page-modal">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">My Account</h4>
+            </div>
+            <div class="modal-body container-fluid" id="user-page-body">
+              <div class="row">
+                <div class="col-sm-8" id="user-page-details">
+                  <!-- This is where we could insert their account information  -->
+                  <span class="account-info" id="user-page-email"> Email: <input class="account-info-box" type="text" name="account-info-email" value="<%= email  %>" disabled></span>
+                  <span class="account-info" id="user-page-password"> Password: <input class="account-info-box" type="password" name="account-info-password" disabled value="********"></span>
+                  <span class="account-info" id="user-page-fname"> First Name: <input class="account-info-box" type="text" name="account-info-fname" value="<%= name  %>"disabled></span>
+                  <span class="account-info" id="user-page-lname"> Last Name: <input class="account-info-box" type="text" name="account-info-lname" value="<%= lname  %>"disabled></span>
+                  <span class="account-info" id="user-page-phone"> Phone Number: <input class="account-info-box" type="tel" name="account-info-phone" value="<%= phone  %>"disabled></span>
+                </div>
+                <div class="col-sm-4" id="user-page-pic">
+                  <img id="accountPic" src="images/passenger.png">
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button class="btn btn-default" data-toggle="modal"
+                    data-target="#logoutModal">Logout</button>
+            </div>
+        </div>
+      </div>
+
       <!-- Modal -->
       <div id="logoutModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -109,39 +156,14 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
+              <button type="button" class="btn btn-default">
+                <a href="/logout">Yes</a>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Modal -->
-      <div id="userPageModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" id="user-page-modal">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">My Account</h4>
-            </div>
-            <div class="modal-body container-fluid" id="user-page-body">
-              <div class="row">
-                <div class="col-sm-4" id="user-page-details">
-                  <!-- This is where we could insert their account information  -->
-                  <span class="account-info" id="user-page-email"> Email: <input class="account-info-box" type="text" name="account-info-email" value="<%= email  %>" disabled></span>
-                  <span class="account-info" id="user-page-password"> Password: <input class="account-info-box" type="password" name="account-info-password" disabled></span>
-                  <span class="account-info" id="user-page-fname"> First Name: <input class="account-info-box" type="text" name="account-info-fname" value="<%= name  %>"disabled></span>
-                  <span class="account-info" id="user-page-lname"> Last Name: <input class="account-info-box" type="text" name="account-info-lname" value="<%= lname  %>"disabled></span>
-                  <span class="account-info" id="user-page-phone"> Phone Number: <input class="account-info-box" type="tel" name="account-info-phone" value="<%= phone  %>"disabled></span>
-                </div>
-              </div>
-            </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-      </div>
       <!-- Modal -->
       <div id="currentRideModal" class="modal fade" role="dialog">
         <div class="modal-dialog" id="cuurent-ride-modal">
@@ -158,7 +180,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">  <a href="#deleteRoute" type="button" data-toggle="modal"
+              <button type="button" class="btn btn-default">  <a href="#deleteRoute" type="button" data-toggle="modal"
                     data-target="#deleteRouteModal">Delete Route</a></button>
             </div>
         </div>

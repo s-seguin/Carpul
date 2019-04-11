@@ -19,7 +19,7 @@ if (dbConn.ssl == "true") {
   dbClient = new pg.Client(dbConn.localConn);
 }
 
-dbClient.connect();
+dbClient.connect(); 
 
 /***
  * Insert a new ride into the Ride table
