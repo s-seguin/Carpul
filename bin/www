@@ -22,74 +22,41 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+var indexRouter = require('../routes/index');
+var usersRouter = require('../routes/users');
+var loginRouter = require('../routes/login');
+var registerRouter = require('../routes/register');
+var logoutRouter = require('../routes/logout');
 
-function embeddedMapFunction(item, index){
-  //Don't process line if empty or fucked
-  if (item.length > 2) {
 
-    console.log("Print element at "+index+": " + item);
-    //Turn line into object
-    var obj = JSON.parse(item);
-    console.log("JSON: " + JSON.stringify(obj));
+var passport = require('passport');
+var pg = require('pg');
+var flash = require('connect-flash');
+var session = require('express-session');
 
-    //I think this should work because the place_id are a fixed length
-    //This basically works except for the first case. For some reason it is slightly longer than the other stringS??
-    var origin = obj.origin.placeId;
-    var destination = obj.destination.placeId;
-    console.log("origin: " + origin);
-    var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
+// pgDbConn = require('./config/database.js');
+require('../config/passport')(passport);
 
-    var fs = require('fs');
-    fs.appendFile("routes\\embeddedMaps.txt", embeddedMapString+"\n", function(err) {
-      if (err) {
-          console.log(err);
-      }
-    });
+//Passport config stuff
+app.use(session({
+  secret: 'somerandomsecrethash',
+  resave: true,
+  saveUninitialized: true,
+  cookie:{
+    expires: false
   }
-}
+})); //Set default values
+app.use(passport.initialize());
+app.use(passport.session()); //Login sessions
+app.use(flash()); //For 'Flashing' messages back to client
 
-var io = require('socket.io')(server);
+///ROUTES
+app.use('/', indexRouter(passport, server));
+app.use('/users', usersRouter(passport));
+app.use('/login', loginRouter(passport));
+app.use('/register', registerRouter(passport));
+app.use('/logout', logoutRouter(passport));
 
-io.on('connection', function(socket){
-  var readline = require('readline');
-  var fs = require('fs');
-  socket.on('sendNewMapToServer', function(directionsObj){
-    console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
-
-    fs.appendFileSync("routes\\SavedRoutes.JSON", JSON.stringify(directionsObj)+"\n", function(err) {
-      if (err) {
-          console.log(err);
-      }
-    });
-    //reads the entire file
-    var fileRead = fs.readFileSync('routes\\SavedRoutes.JSON', "utf8");
-    //creates an array of each save route
-    var fileLines = fileRead.split("\n");
-
-    //Print for debugging
-    console.log("Parse this Whole File: \n" +fileRead);
-
-    //Creates the link for each obj in the JSON and stores it in embeddedMaps.txt
-    fileLines.forEach(embeddedMapFunction);
-
-    //Read the file of links
-    var mapFile = fs.readFileSync('routes\\embeddedMaps.txt', "utf8");
-    //Turns each link into an element of an array
-    var mapLinks = mapFile.split("\n");
-    console.log(mapLinks);  //Debugging
-
-    //Serve the first map to the client for now
-    console.log("sending: " + mapLinks[0]);
-    socket.emit('sendEmbeddedMap', mapLinks[0]);
-  });
-  socket.on('getMapsFromServer', function(){
-    console.log("Sending all the maps to the client");
-    var mapFile = fs.readFileSync('routes/embeddedMaps.txt', "utf8");
-    //Turns each link into an element of an array
-    var mapLinks = mapFile.split("\n");
-    socket.emit('sendMapsToClient', mapLinks);
-  })
-});
 
 
 /**
