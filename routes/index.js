@@ -30,7 +30,7 @@ function insertIntoDB(rideObj) {
   console.log("Insert into DB");
   dbClient.query(
       "INSERT INTO ride(user_id, start_location, end_location, expire, capacity, available, embedded_map, directions_obj, ride_date, created_on, price_per_seat) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, Now(), Now(), $9);",
-      [2, 'Calgary', 'Edmonton', rideObj.expire, rideObj.capacity, rideObj.capacity, rideObj.embeddedMapString, JSON.stringify(rideObj.directionsObj), '4'],
+      [rideObj.user_id, rideObj.directionsObj.origin, rideObj.directionsObj.destination, rideObj.expire, rideObj.capacity, rideObj.capacity, rideObj.embeddedMapString, JSON.stringify(rideObj.directionsObj), '4'],
       (err, res) => {
         if (res) {
           console.log(res);
@@ -88,7 +88,7 @@ module.exports = function(passport, server) {
     // and as soon as they go to www code they will be assigened a new socket id.
     console.log(req.cookies);
     console.log(req.user);
-    res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone });
+    res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
   ///We could likely delete this embeddedMapFunction function
@@ -129,6 +129,7 @@ module.exports = function(passport, server) {
       console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
       var rideObj = new Object();
       rideObj.driver = socket.username; //value got from register
+      rideObj.user_id = socket.user_id //Value got from register
       var postTime = new Date();
       rideObj.expire = new Date(postTime.getTime() + (1*60*60*1000));
       console.log('Ride posted @ ' + postTime.getHours() + ':' + postTime.getMinutes() +'. Will expire @' +rideObj.expire.getHours() + ':' + rideObj.expire.getMinutes());
@@ -143,16 +144,16 @@ module.exports = function(passport, server) {
       socket.emit('sendEmbeddedMap', rideObj);
     });
     socket.on('getMapsFromServer', function(){
-      console.log("Sending all the maps to the client");
-      var mapFile = fs.readFileSync('routes/embeddedMaps.txt', "utf8");
+      console.log("Please Query the database and make a list of non expired Maps");
       //Turns each link into an element of an array
-      var mapLinks = mapFile.split("\n");
+      var mapLinks = null;
       socket.emit('sendMapsToClient', mapLinks);
     });
     socket.on('register', function(data){
-      console.log('Register event: ' + data.id + " is " + data.name);
+      console.log('Register event. User_id ' + data.user_id + " is " + data.name);
       socket.username = data.name;
-      console.log(socket.username);
+      socket.user_id = data.user_id;
+      console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
     });
     /*---------------
     Ping temp code
@@ -168,9 +169,3 @@ module.exports = function(passport, server) {
 
   return router;
 };
-
-
-
-
-
-

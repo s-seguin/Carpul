@@ -1,7 +1,7 @@
 var socket = io();
 socket.on('connect', function(){
   console.log(name + ' is connected and has Socket id ' + socket.id);
-  socket.emit('register', {name: name, id: socket.id});
+  socket.emit('register', {name: name, user_id: user_id});
 });
 
 $(function()  {

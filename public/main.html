@@ -11,6 +11,7 @@
     <!--We need to initialize the variables passed in for EJS before we load our src'd js script file -->
     <script type="text/javascript">
       var name = '<%= name %>'; //init var for main.js
+      var user_id = '<%= user_id %>';
       console.log('<%= email  %> <%= lname %> <%= phone %>'); //log ejs values for debggerino
     </script>
     <!-- Latest compiled JavaScript -->
@@ -206,7 +207,7 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-4" id='testMap'>
+        <div class="col-sm-4">
           <div class="mr-2">
             <h3>Driver: Steve, 4 star</h3>
             <h3>Departure: 10:20 am</h3>
