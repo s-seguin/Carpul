@@ -28,9 +28,12 @@
             data-target="#currentRideModal">Current Ride</a>
         <a href="#userPage" type="button" data-toggle="modal"
             data-target="#userPageModal">My Account</a>
-        <a href="#logout" type="button" data-toggle="modal"
-            data-target="#logoutModal">Logout</a>
+
+        <!-- Dont know why the button won't go on the otherside of the input box.. Not a big deal though. -->
         <input type="text" placeholder="Search for a different ride..">
+        <div class="text-right">
+          <button class="btn btn-success" id="goButton">Go</button>
+        </div>
       </div>
       <h1>Destination: University of Calgary</h1>
 
@@ -116,7 +119,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
+              <!-- Can't make it a <button> tag redirection doesn't work for some reason then-->
+              <a href="/logout" type="button" class="btn btn-default">Yes</a>
             </div>
           </div>
         </div>
@@ -145,13 +149,15 @@
             </div>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal"><a href="#logout" type="button" data-toggle="modal"
+                  data-target="#logoutModal">Logout</a></button>
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
       </div>
       <!-- Modal -->
       <div id="currentRideModal" class="modal fade" role="dialog">
-        <div class="modal-dialog" id="cuurent-ride-modal">
+        <div class="modal-dialog" id="current-ride-modal">
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
@@ -160,7 +166,14 @@
             </div>
             <div class="modal-body container-fluid" id="current-ride-body">
               <!-- This is where we can display the current ride they are the driver of (or ride they signed up for as a passanger??)  -->
-              <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
+              <!-- Now will change when you create a ride. Same way first map does -->
+              <div class="col-sm-4" id='testMap'>
+                <div class="mr-2">
+                  <h3></h3>
+                  <h3></h3>
+                  <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
+                </div>
+              </div>
             </div>
             </div>
             <div class="modal-footer">

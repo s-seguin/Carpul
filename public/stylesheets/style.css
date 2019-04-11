@@ -152,6 +152,10 @@ img.ride-selector {
   z-index: 10000 !important;
 }
 
+/* Can fiddle with if you want. I think this looks alright though. */
+#goButton{
+  margin: 8px;
+}
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {
