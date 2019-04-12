@@ -9,10 +9,22 @@ $(function()  {
   socket.emit('getMapsFromServer');
   socket.on('sendMapsToClient', function(maps){
     i=0;
-    $('iframe').each(function(){
-      $(this).attr('src', maps[i]);
-      i++;
-    })
+    try {
+      console.log("received " + maps.length + " maps");
+      console.log(maps);
+      $('iframe').each(function(){
+        console.log($(this).attr('src'));
+        if (i < maps.length && $(this).attr('src') != "about:blank") { //idk wherer the hell about:blank is coming from but it's an unseeable iframe that needs to be ignored when populating
+          console.log(maps[i].embedded_map);
+          $(this).attr('src', maps[i].embedded_map);
+          i++;
+        }
+      })
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log("Done drawing maps");
+    }
   });
   socket.on("sendEmbeddedMap", function (rideObj) {
     console.log("Embedded map received: " + rideObj.embeddedMapString);
@@ -166,13 +178,20 @@ AutocompleteDirectionsHandler.prototype.route = function () {
           function (response, status) {
             console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
             //Here we want to send this object back to server in order for the server to save this route for later
-            socket.emit("sendNewMapToServer", directionsObj);
+            //socket.emit("sendNewMapToServer", directionsObj);
 
             if (status === 'OK') {
               me.directionsDisplay.setDirections(response);
             } else {
               window.alert('Directions request failed due to ' + status);
             }
-              console.log("Waiting for map from server");
+              console.log("Waiting to click button");
+              $('.ride-detail-element.search').click(function(){
+                console.log("Search button clicked");
+                console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
+                //Here we want to send this object back to server in order for the server to save this route for later
+                socket.emit("sendNewMapToServer", directionsObj);
+                console.log("Waiting for map from server");
+              });
           })
 };

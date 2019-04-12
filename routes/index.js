@@ -78,7 +78,7 @@ module.exports = function(passport, server) {
   });
 
   router.get('/', isLoggedIn, function(req, res, next) {
-    selectAllFromRide();
+    //selectAllFromRide();
     console.log('index.js get');
     savedUsername = req.user.fname;
     console.log('Cookie already has value: ' + req.cookies['Carpul'] + 'Setting to ' + savedUsername);
@@ -144,10 +144,32 @@ module.exports = function(passport, server) {
       socket.emit('sendEmbeddedMap', rideObj);
     });
     socket.on('getMapsFromServer', function(){
-      console.log("Please Query the database and make a list of non expired Maps");
+      let mapObjs = null;
+      let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
+      console.log("Querying the database and make a list of non expired Maps");
+      console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
+      let testTime = "2019-04-11T19:15:44";
+      console.log(testTime + "---" + timeOfQuery);
+      dbClient.query(
+        "select * from ride WHERE expire >= $1 AND NOT expire = 'expire'", [timeOfQuery],
+        (err, res) => {
+          if (res) {
+            console.log("num rows from query " + res.rows.length);
+            mapObjs = [];
+            res.rows.forEach((item) => {
+              mapObjs.push(item);
+            });
+            console.log("Sending " + mapObjs.length + " maps");
+            socket.emit('sendMapsToClient', mapObjs);
+          } else {
+            console.log("there was an error: " + err);
+            console.log(mapObjs);
+            socket.emit('sendMapsToClient', mapObjs);
+          }
+        }
+      );
       //Turns each link into an element of an array
-      var mapLinks = null;
-      socket.emit('sendMapsToClient', mapLinks);
+      console.log("Waiting for DB response");
     });
     socket.on('register', function(data){
       console.log('Register event. User_id ' + data.user_id + " is " + data.name);
