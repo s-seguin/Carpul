@@ -19,32 +19,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
+    <nav class="topnav">
+      <a class="active" href="#explore">Explore</a>
+      <a href="#newRide" type="button" data-toggle="modal"
+          data-target="#newRideModal">New Ride</a>
+      <a href="#currentRide" type="button" data-toggle="modal"
+          data-target="#currentRideModal">Current Ride</a>
+      <a id="notifications">
+          <img src="images/bell.png">
+      </a>
+      <!-- <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="images/bell.png">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="notifications">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div> -->
+      <a href="#userPage" id="account" type="button" data-toggle="modal"
+          data-target="#userPageModal">
+          <img src="images/user.png">
+      </a>
+      <input type="text" placeholder="Search for a different ride..">
+    </nav>
     <div class="container-fluid">
-      <div class="topnav">
-        <a class="active" href="#explore">Explore</a>
-        <a href="#newRide" type="button" data-toggle="modal"
-            data-target="#newRideModal">New Ride</a>
-        <a href="#currentRide" type="button" data-toggle="modal"
-            data-target="#currentRideModal">Current Ride</a>
-        <a id="notifications">
-            <img src="images/bell.png">
-        </a>
-        <!-- <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="images/bell.png">
-          </button>
-          <div class="dropdown-menu" aria-labelledby="notifications">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </div> -->
-        <a href="#userPage" id="account" type="button" data-toggle="modal"
-            data-target="#userPageModal">
-            <img src="images/user.png">
-        </a>
-        <input type="text" placeholder="Search for a different ride..">
-      </div>
+
       <h1>Destination: University of Calgary</h1>
 
       <!-- Modal -->
