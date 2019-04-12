@@ -54,18 +54,14 @@
                   <input class="controls" id="destination-input" placeholder="Enter a destination location"
                          type="text">
                   <div class="selector-images" >
-                    <img alt="Passenger" class="ride-selector" id="imgPassenger" onclick="switchSelectedRole(this.id)"
-                         src="images/passenger.png">
                     <img alt="Driver" class="ride-selector" id="imgDriver" onclick="switchSelectedRole(this.id)" src="images/car.png">
                   </div>
-                  <span class="ride-detail-element detail-span" id="group-size"> Group size: <input class="single-digit" maxlength="1"
-                                                                                                    pattern="\d*" size="1"
-                                                                                                    type="text"></span>
+
                   <div id="driver-form-elements">
-                    <span class="ride-detail-element detail-span" id="departure-time"> Departure time: <input class="single-digit" type="time"></span>
-                    <span class="ride-detail-element detail-span" id="capacity"> Capacity: <input class="single-digit" maxlength="1" pattern="\d*"
+                    <span class="detail-span" id="destinationTime"> Destination time: <input id="destinationInput" class="rideDetailsInput" type="time"></span>
+                    <span class="detail-span" id="capacity"> Capacity: <input id="capInput" class="rideDetailsInput" placeholder="# of open seats" maxlength="1" pattern="\d*"
                                                                                                   size="1" type="text"></span>
-                    <span class="ride-detail-element detail-span" id="price"> Price: <input class="single-digit" maxlength="6" pattern="\d*"
+                    <span class="detail-span" id="price"> Price: $ <input id="priceInput" class="rideDetailsInput" placeholder="$$$/seat" maxlength="6" pattern="\d*"
                                                                                             size="6" type="text"></span>
                   </div>
 
