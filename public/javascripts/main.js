@@ -39,25 +39,6 @@ $(function()  {
 
 var map = null;
 
-function switchSelectedRole(id) {
-  const imgPassenger = document.getElementById('imgPassenger');
-  const imgDriver = document.getElementById('imgDriver');
-  const groupSize = document.getElementById('group-size');
-  const driverFormElements = document.getElementById('driver-form-elements');
-  if (id === 'imgPassenger' && (groupSize.style.display === "none" || groupSize.style.display === "")) {
-    groupSize.style.display = "table";
-    driverFormElements.style.display = "none";
-    imgPassenger.style.backgroundColor = "mediumseagreen";
-    imgDriver.style.backgroundColor = "lightskyblue";
-  }
-  else if (id === 'imgDriver' && (driverFormElements.style.display === "none" || driverFormElements.style.display === "")) {
-    driverFormElements.style.display = "table";
-    groupSize.style.display = "none";
-    imgPassenger.style.backgroundColor = "lightskyblue";
-    imgDriver.style.backgroundColor = "mediumseagreen";
-  }
-}
-
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script

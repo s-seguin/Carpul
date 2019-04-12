@@ -19,7 +19,7 @@ if (dbConn.ssl == "true") {
   dbClient = new pg.Client(dbConn.localConn);
 }
 
-dbClient.connect();
+dbClient.connect(); 
 
 /***
  * Insert a new ride into the Ride table
@@ -67,14 +67,11 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
-
 module.exports = function(passport, server) {
-
   var savedUsername = null;
 
   router.get('/main', isLoggedIn, function(req, res, next) {
     res.redirect('/');
-
   });
 
   router.get('/', isLoggedIn, function(req, res, next) {
@@ -187,7 +184,6 @@ module.exports = function(passport, server) {
     Ping temp code End
     -----------------*/
   });
-
 
   return router;
 };
