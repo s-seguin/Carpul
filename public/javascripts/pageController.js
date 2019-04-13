@@ -21,11 +21,11 @@ function renderMyAccount(){
     $('#myAccountNav').addClass('active');
     $('#mainViewer').html(myAccount);
 }
-function renderSearch(){
+function renderSearch(searchValue){
     $('a').removeClass('active');
     $('#exploreNav').addClass('active');
     $('#mainViewer').html(searchPage);
-    socket.emit('getMapsFromServerSearch');
+    $('#searchResultName').html('Destination: ' + searchValue);
 }
 let myAccount =
     '<div id="myAccount">\n' +
@@ -58,5 +58,5 @@ let mainPage =
     '<div class="row" id="exploreRow"> </div>';
 
 let searchPage =
-    '<h1>Destination: University of Calgary</h1>' +
-    '<div class="row" id="exploreRow"> </div>'; 
+    '<h1 id="searchResultName">Destination: </h1>' +
+    '<div class="row" id="exploreRow"> </div>';
