@@ -6,7 +6,7 @@ socket.on('connect', function(){
 
 $(function()  {
   console.log('init. Getting maps from server');
-  socket.emit('getMapsFromServer');
+
   socket.on('sendMapsToClient', function(maps){
     i=0;
     try {
