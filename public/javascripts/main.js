@@ -250,6 +250,7 @@ function searchRender(searchValue){
     i=0;
     var searchMaps = [];
     try {
+      $('#exploreRow').html("");
       for (let index in maps) {
         console.log(maps[index].end_location +" ---- "+searchValue);
         if(maps[index].end_location.includes(searchValue)){
