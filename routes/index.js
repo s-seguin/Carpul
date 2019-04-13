@@ -84,7 +84,8 @@ module.exports = function(passport, server) {
     // and as soon as they go to www code they will be assigened a new socket id.
     console.log(req.cookies);
     console.log(req.user);
-    res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
+    res.render('../public/index.ejs',  {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
+   // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
   ///We could likely delete this embeddedMapFunction function

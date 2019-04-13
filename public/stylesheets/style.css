@@ -41,7 +41,7 @@ h3, h4, h5 {
   padding-left: 5%;
 }
 
-#account, #notifications {
+#myAccountNav, #notifications, #logout-icon {
   float: right;
   padding-top: 8px;
   margin: 0;
@@ -111,6 +111,10 @@ h3, h4, h5 {
 }
 
 #post-ride-body {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   width: 100%;
 }
 
