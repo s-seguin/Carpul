@@ -39,6 +39,15 @@ $(function()  {
       console.log("Done drawing maps");
     }
   });
+  socket.on('sendMyRidesToClient', function(maps){
+    i=0;
+    try{
+      for(let index in maps){
+        let pastRide = '<li>' + maps.ride_id + '</li>';
+        $('#myRidesNav').append($(pastRide));
+      }
+    }
+  })
   socket.on("sendEmbeddedMap", function (rideObj) {
     console.log("Embedded map received: " + rideObj.embeddedMapString);
     $('#testMap iframe').attr('src', rideObj.embeddedMapString);

@@ -11,6 +11,7 @@ function renderMainPage(){
 }
 
 function renderMyRides(){
+    socket.emit('getMyRidesFromServer');
     $('a').removeClass('active');
     $('#myRidesNav').addClass('active');
     $('#mainViewer').html(myRides);
