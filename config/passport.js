@@ -57,7 +57,7 @@ module.exports = function (passport) {
                     (err, res) => {
                         if (res && res.rowCount > 0) {
                             if (!err) {
-                                res.rows.forEach((item) => console.log(item));
+                                //res.rows.forEach((item) => console.log(item));
                                 //console.log("RESULT::::" + res.rows[0]);
                                 return (checkPasswordMatches(res.rows[0])); //there should only be one match
                             } else {

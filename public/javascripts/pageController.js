@@ -28,7 +28,6 @@ let myAccount =
     '        <h4>My Account</h4>\n' +
     '        <div>\n' +
     '            Account Details\n' +
-    '\n' +
     '        </div>\n' +
     '        <div class="container-fluid">\n' +
     '            <div class="col-sm-8" id="user-page-details">\n' +
@@ -39,7 +38,6 @@ let myAccount =
     '                <span class="account-info" id="user-page-phone"> Phone Number: <input class="account-info-box" type="tel" name="account-info-phone" value="'+ phone +'"disabled></span>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '\n' +
     '        <div class="col-sm-4" id="user-page-pic">\n' +
     '            <img id="accountPic" src="images/passenger.png">\n' +
     '        </div>\n' +
