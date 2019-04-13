@@ -74,7 +74,7 @@ module.exports = function(passport, server) {
   });
 
   router.get('/', isLoggedIn, function(req, res, next) {
-    selectAllFromRide();
+    //selectAllFromRide();
     console.log('index.js get');
     savedUsername = req.user.fname;
     console.log('Cookie already has value: ' + req.cookies['Carpul'] + 'Setting to ' + savedUsername);
@@ -84,7 +84,7 @@ module.exports = function(passport, server) {
     // and as soon as they go to www code they will be assigened a new socket id.
     console.log(req.cookies);
     console.log(req.user);
-    res.render('../public/main.html', {name: savedUsername,email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
+    res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
   ///We could likely delete this embeddedMapFunction function
@@ -135,16 +135,38 @@ module.exports = function(passport, server) {
       socket.emit('sendEmbeddedMap', rideObj);
     });
     socket.on('getMapsFromServer', function(){
-      console.log("Sending all the maps to the client");
-      var mapFile = fs.readFileSync('routes/embeddedMaps.txt', "utf8");
+      let mapObjs = null;
+      let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
+      console.log("Querying the database and make a list of non expired Maps");
+      console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
+      let testTime = "2019-04-11T19:15:44";
+      console.log(testTime + "---" + timeOfQuery);
+      dbClient.query(
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+        (err, res) => {
+          if (res) {
+            console.log("num rows from query " + res.rows.length);
+            mapObjs = [];
+            res.rows.forEach((item) => {
+              mapObjs.push(item);
+            });
+            console.log("Sending " + mapObjs.length + " maps");
+            socket.emit('sendMapsToClient', mapObjs);
+          } else {
+            console.log("there was an error: " + err);
+            console.log(mapObjs);
+            socket.emit('sendMapsToClient', mapObjs);
+          }
+        }
+      );
       //Turns each link into an element of an array
-      var mapLinks = mapFile.split("\n");
-      socket.emit('sendMapsToClient', mapLinks);
+      console.log("Waiting for DB response");
     });
     socket.on('register', function(data){
-      console.log('Register event: ' + data.id + " is " + data.name);
+      console.log('Register event. User_id ' + data.user_id + " is " + data.name);
       socket.username = data.name;
-      console.log(socket.username);
+      socket.user_id = data.user_id;
+      console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
     });
     /*---------------
     Ping temp code

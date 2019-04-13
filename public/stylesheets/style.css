@@ -1,7 +1,12 @@
+h3, h4, h5 {
+  max-width: 50ch;
+  overflow: hidden;
+}
+
 /* Add a black background color to the top navigation bar */
 .topnav {
   overflow: hidden;
-  background-color: #e9e9e9;
+  background-color: #BFD3E2;
 }
 
 /* Style the links inside the navigation bar */
@@ -13,6 +18,27 @@
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
+}
+
+.container-fluid {
+  background-color: #F0F8FF;
+}
+
+.well {
+  background-color: #D7E6F1;
+  border-color: #82A5BE;
+}
+
+.col-sm-4 {
+  background-color: #F0F8FF;
+}
+
+.col-sm-12 {
+  padding: 0;
+}
+
+.ride-body {
+  padding-left: 5%;
 }
 
 #account, #notifications {
@@ -102,8 +128,6 @@
   background-color: #e9e9e9;
 }
 
-<<<<<<< HEAD
-=======
 #driver-form-elements {
   text-align: center;
 }
@@ -113,11 +137,10 @@
 }
 
 iframe {
-    width: 100%;
+    width: 99.9%;
     height: 300px;
 }
 
->>>>>>> 7791fa9e74fd78bb378e27507c16ae6f037dedd7
 .ride-detail-element {
   display: table-row;
   width: inherit;
@@ -212,6 +235,10 @@ display: inline-block;
   z-index: 10000 !important;
 }
 
+/* Can fiddle with if you want. I think this looks alright though. */
+#goButton{
+  margin: 8px;
+}
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 600px) {
