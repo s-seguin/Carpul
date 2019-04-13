@@ -15,11 +15,10 @@
         let email = '<%= email %>'
         let phone = '<%= phone %>'
         let user_id = '<%= user_id %>';
-        console.log('<%= email %> <%= lname %> <%= phone %>'); //log ejs values for debggerino
     </script>
     <!-- Latest compiled JavaScript -->
-    <script type="text/javascript" src="javascripts/index.js"></script>
     <script type="text/javascript" src="javascripts/main.js"></script>
+    <script type="text/javascript" src="javascripts/pageController.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -32,6 +31,10 @@
             <a id="newRideNav" href="#newRide" type="button" data-toggle="modal"
                data-target="#newRideModal">New Ride</a>
             <a id="myRidesNav" onclick="renderMyRides()">My Rides</a>
+            <a id="logout-icon" href="#logout" type="button" data-toggle="modal"
+               data-target="#logoutModal">
+                <img src="images/logout.png">
+            </a>
             <a id="notifications">
                 <img src="images/bell.png">
             </a>
@@ -39,6 +42,7 @@
             <a id="myAccountNav" onclick="renderMyAccount()">
                 <img src="images/user.png">
             </a>
+
             <input type="text" placeholder="Search for a different ride..">
         </nav>
         <div class="container-fluid" id="mainViewer">
@@ -65,18 +69,18 @@
                         <input class="controls" id="destination-input" placeholder="Enter a destination location"
                                type="text">
                         <div class="selector-images" >
-                            <img alt="Driver" class="ride-selector" id="imgDriver" onclick="switchSelectedRole(this.id)" src="images/car.png">
+                            <img alt="Driver" class="ride-selector" id="imgDriver" src="images/car.png">
                         </div>
 
                         <div id="driver-form-elements">
-                            <span class="detail-span" id="destinationTime"> Destination time: <input id="destinationInput" class="rideDetailsInput" type="time"></span>
+                            <span class="detail-span" id="departureDate"> Ride date: <input id="dateInput" class="rideDetailsInput" type="date"></span>
+                            <span class="detail-span" id="departureTime"> Departure: <input id="timeInput" class="rideDetailsInput" type="time"></span>
                             <span class="detail-span" id="capacity"> Capacity: <input id="capInput" class="rideDetailsInput" placeholder="# of open seats" maxlength="1" pattern="\d*"
                                                                                       size="1" type="text"></span>
                             <span class="detail-span" id="price"> Price: $ <input id="priceInput" class="rideDetailsInput" placeholder="$$$/seat" maxlength="6" pattern="\d*"
                                                                                   size="6" type="text"></span>
                         </div>
-
-                        <button class="ride-detail-element search">Post</button>
+                        <button class="ride-detail-element" id="btnPostRide" onclick="postRide()">Post Ride</button>
                     </div>
                     <div class="col-sm-8" id="map"></div>
                 </div>
@@ -87,12 +91,6 @@
                     </div>
                 </div>
             </div>
-            <footer>
-                <span>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com"
-                                                                                                        title="Flaticon">www.flaticon.com</a>&nbsp;</span>
-                <div>Icon made by <a href="https://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from
-                    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-            </footer>
             <script async
                     defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"></script>
             <!-- Test Portion for Embedded Map -->
@@ -101,5 +99,26 @@
     </div>
 
 </div>
+
+<!-- Modal -->
+<div id="logoutModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Log Out Of Account</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you wish to log out?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-default">
+                    <a href="/logout">Yes</a>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 </html>

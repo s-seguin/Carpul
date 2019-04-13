@@ -7,6 +7,7 @@ function renderMainPage(){
     $('a').removeClass('active');
     $('#exploreNav').addClass('active');
     $('#mainViewer').html(mainPage);
+    socket.emit('getMapsFromServer');
 }
 
 function renderMyRides(){
