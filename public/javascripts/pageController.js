@@ -11,10 +11,10 @@ function renderMainPage(){
 }
 
 function renderMyRides(){
-    socket.emit('getMyRidesFromServer');
     $('a').removeClass('active');
     $('#myRidesNav').addClass('active');
     $('#mainViewer').html(myRides);
+    socket.emit('getMyRidesFromServer');
 }
 
 function renderMyAccount(){
@@ -45,7 +45,9 @@ let myAccount =
     '    </div>\n' +
     '</div>';
 
-let myRides = '<div>My Rides</div>';
+let myRides = '<div>My Rides: ' +
+                '<ul id=myRidesList></ul>' +
+              '</div>';
 
 let mainPage =
     '<h1>Destination: University of Calgary</h1>' +
