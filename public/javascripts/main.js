@@ -10,6 +10,19 @@ $(function()  {
   socket.on('sendMapsToClient', function(maps){
     i=0;
     try {
+      for (let index in maps) {
+        var column =
+          '<div class="col-sm-4">' +
+            '<div class="col-sm-12 well">' +
+              '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
+              '<div class="ride-body">' +
+                '<h4>Driver: ' + maps[index].fname+ '</h4>' +
+                '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        $('#exploreRow').append($(column));
+      }
       console.log("received " + maps.length + " maps");
       console.log(maps);
       $('iframe').each(function(){

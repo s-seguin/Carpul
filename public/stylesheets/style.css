@@ -1,3 +1,8 @@
+h3, h4, h5 {
+  max-width: 50ch;
+  overflow: hidden;
+}
+
 /* Add a black background color to the top navigation bar */
 .topnav {
   overflow: hidden;

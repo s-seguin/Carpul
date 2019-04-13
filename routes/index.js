@@ -148,7 +148,7 @@ module.exports = function(passport, server) {
       let testTime = "2019-04-11T19:15:44";
       console.log(testTime + "---" + timeOfQuery);
       dbClient.query(
-        "select * from ride WHERE expire >= $1 AND NOT expire = 'expire'", [timeOfQuery],
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
         (err, res) => {
           if (res) {
             console.log("num rows from query " + res.rows.length);
