@@ -40,6 +40,27 @@ function insertIntoDB(rideObj) {
   );
   //dbClient.close();
 }
+function sendMyRidesToClient(socket){
+  let mapObjs = null;
+  dbClient.query(
+    "SELECT * FROM ride WHERE user_id=$1",[socket.user_id],
+    (err, res) => {
+      if (res) {
+        console.log("num rows from getMyRides query " + res.rows.length);
+        mapObjs = [];
+        res.rows.forEach((item) => {
+          mapObjs.push(item);
+        });
+        console.log("Sending " + mapObjs.length + " maps");
+        socket.emit('sendMyRidesToClient', mapObjs);
+      } else {
+        console.log("there was an error: " + err);
+        console.log(mapObjs);
+        socket.emit('sendMapsToClient', mapObjs);
+      }
+    }
+  );
+}
 
 ///TESTING to make sure the thing inserted
 function selectAllFromRide() {
@@ -199,22 +220,19 @@ module.exports = function(passport, server) {
       console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
     });
     socket.on('getMyRidesFromServer', function(){
-      let mapObjs = null;
+      sendMyRidesToClient(socket);
+    });
+    socket.on("deleteRide", function(data){
+      console.log("request to delete ride " + data);
+      let rideToDelete = data;
       dbClient.query(
-        "SELECT * FROM ride WHERE user_id=$1",[socket.user_id],
+        "DELETE FROM ride WHERE ride_id=$1",[rideToDelete],
         (err, res) => {
           if (res) {
-            console.log("num rows from getMyRides query " + res.rows.length);
-            mapObjs = [];
-            res.rows.forEach((item) => {
-              mapObjs.push(item);
-            });
-            console.log("Sending " + mapObjs.length + " maps");
-            socket.emit('sendMyRidesToClient', mapObjs);
+            console.log("Deleted: \n" + JSON.stringify(res));
+            sendMyRidesToClient(socket);
           } else {
             console.log("there was an error: " + err);
-            console.log(mapObjs);
-            socket.emit('sendMapsToClient', mapObjs);
           }
         }
       );

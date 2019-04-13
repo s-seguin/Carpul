@@ -40,13 +40,16 @@ $(function()  {
     }
   });
   socket.on('sendMyRidesToClient', function(maps){
+    $('#myRidesList').html("");
     i=0;
     console.log("received " + maps.length + " ride the user has been apart of from server");
     try{
       for(let index in maps){
         let pastRide = '<li> ' + maps[index].ride_date + '<br>' +
         'From: ' + maps[index].start_location + "<br>" +
-        'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat + '</li>';
+        'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat +
+        '</li>' + '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" ' +
+        'data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '">Delete Ride</a>';
         $('#myRidesList').append($(pastRide));
       }
     } catch (e){
@@ -54,7 +57,26 @@ $(function()  {
     } finally {
       console.log("Done getting my rides from server");
     }
-  })
+  });
+  $(document).on("click", ".Delete_Ride", function(){
+    let upForDeletion = $(this).data("ride-id");
+    console.log('Delete ride? ' + $(this).data("ride-id"));
+    $("#Delete_RideModal").data("ride_id", upForDeletion);
+  });
+  $("#Delete_Ride_Yes").click(function(){
+    let upForDeletion = $("#Delete_RideModal").data("ride_id");
+    console.log("Yes Clicked for ride " + upForDeletion);
+    socket.emit("deleteRide", upForDeletion);
+    $("#Delete_RideModal").data("ride_id", -1);
+    upForDeletion = $("#Delete_RideModal").data("ride_id");
+  });
+  $("#Delete_Ride_No").click(function(){
+    let upForDeletion = $("#Delete_RideModal").data("ride_id");
+    console.log("No Clicked for ride " + upForDeletion);
+    $("#Delete_RideModal").data("ride_id", -1);
+    upForDeletion = $("#Delete_RideModal").data("ride_id");
+    console.log('Val set to ' + upForDeletion);
+  });
   socket.on("sendEmbeddedMap", function (rideObj) {
     var column =
       '<div class="col-sm-4">' +
