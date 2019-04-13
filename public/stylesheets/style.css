@@ -41,7 +41,7 @@ h3, h4, h5 {
   padding-left: 5%;
 }
 
-#account, #notifications {
+#myAccountNav, #notifications, #logout-icon {
   float: right;
   padding-top: 8px;
   margin: 0;
@@ -111,6 +111,10 @@ h3, h4, h5 {
 }
 
 #post-ride-body {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   width: 100%;
 }
 
@@ -126,10 +130,6 @@ h3, h4, h5 {
 
 #ride-details {
   background-color: #e9e9e9;
-}
-
-#driver-form-elements {
-  text-align: center;
 }
 
 #group-size {
@@ -162,7 +162,7 @@ img.ride-selector {
   border-radius: 20px;
 }
 
-.search {
+#btnPostRide {
   height: 50px;
   width: 100%;
   position: absolute;
@@ -197,8 +197,8 @@ display: inline-block;
 }
 
 .single-digit, .detail-span {
-  width: 70%;
-  margin-left: 15%;
+  width: 80%;
+  margin-left: 10%;
   vertical-align: middle;
   line-height: 32px;
   height: 32px;
