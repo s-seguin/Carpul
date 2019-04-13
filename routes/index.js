@@ -29,7 +29,8 @@ function insertIntoDB(rideObj) {
   //TODO: Remove hard coded values and use real value from users
   console.log("Insert into DB");
   dbClient.query(
-      `INSERT INTO ride(user_id, start_location, end_location, expire, capacity, available, embedded_map, directions_obj, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}','${rideObj.expire}',${rideObj.capacity},${rideObj.available},'${rideObj.embeddedMapString}','${rideObj.directions_obj}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
+      "INSERT INTO ride(user_id, start_location, end_location, expire, capacity, available, embedded_map, directions_obj, ride_date, created_on, price_per_seat) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, Now(), Now(), $9);",
+      [rideObj.user_id, rideObj.directionsObj.origin, rideObj.directionsObj.destination, rideObj.expire, rideObj.capacity, rideObj.capacity, rideObj.embeddedMapString, JSON.stringify(rideObj.directionsObj), '4'],
       (err, res) => {
         if (res) {
           console.log(res);
@@ -84,8 +85,7 @@ module.exports = function(passport, server) {
     // and as soon as they go to www code they will be assigened a new socket id.
     console.log(req.cookies);
     console.log(req.user);
-    res.render('../public/index.ejs',  {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
-   // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
+    res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
   ///We could likely delete this embeddedMapFunction function
@@ -121,15 +121,20 @@ module.exports = function(passport, server) {
     var readline = require('readline');
     var fs = require('fs');
 
-    socket.on('sendNewMapToServer', function(rideFormData){
+    socket.on('sendNewMapToServer', function(directionsObj){
       //TODO: get user id from session and store in rideObj
-
-      let rideObj = rideFormData;
-      rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+rideFormData.originPlaceId+"&destination=place_id:"+rideFormData.destinationPlaceId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
-      rideObj.directions_obj = ""
-      rideObj.expire = ""
-
+      console.log(JSON.stringify(directionsObj.origin) + " " + JSON.stringify(directionsObj.destination) + " " + directionsObj.travelMode);
+      var rideObj = new Object();
+      rideObj.driver = socket.username; //value got from register
+      rideObj.user_id = socket.user_id //Value got from register
+      var postTime = new Date();
+      rideObj.expire = new Date(postTime.getTime() + (1*60*60*1000));
+      console.log('Ride posted @ ' + postTime.getHours() + ':' + postTime.getMinutes() +'. Will expire @' +rideObj.expire.getHours() + ':' + rideObj.expire.getMinutes());
+      rideObj.capacity = 4 ///Setting Defulat capacity value
+      rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+directionsObj.origin.placeId+"&destination=place_id:"+directionsObj.destination.placeId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
+      rideObj.directionsObj = directionsObj; //sending theh whole thing cause why not
       //Send this map right back to the client
+      //// TODO: Insert this into the database
       insertIntoDB(rideObj);
 
       console.log("sending: " + JSON.stringify(rideObj) );
