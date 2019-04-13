@@ -1,30 +1,30 @@
 var LocalStrategy = require('passport-local').Strategy; //For authenticating email and password
 
 
-//db stuff
-var dbConn = require('../config/database');
-var pg = require('pg');
-var dbClient;
+// //db stuff
+// var dbConn = require('../config/database');
+// var pg = require('pg');
+// var dbClient;
+//
+// if (dbConn.ssl == "true") {
+//     console.log("[DB]  connecting to heroku db");
+//     dbClient = new pg.Client(
+//         {
+//             connectionString: dbConn.herokuConn,
+//             ssl: dbConn.ssl
+//         }
+//     );
+// } else {
+//     console.log("[DB]  connecting to local db");
+//     dbClient = new pg.Client(dbConn.localConn);
+// }
+//
+//
+// dbClient.connect();
+// console.log('[DB]  connected');
 
-if (dbConn.ssl == "true") {
-    console.log("[DB]  connecting to heroku db");
-    dbClient = new pg.Client(
-        {
-            connectionString: dbConn.herokuConn,
-            ssl: dbConn.ssl
-        }
-    );
-} else {
-    console.log("[DB]  connecting to local db");
-    dbClient = new pg.Client(dbConn.localConn);
-}
 
-
-dbClient.connect();
-console.log('[DB]  connected');
-
-
-module.exports = function (passport) {
+module.exports = function (passport, dbClient) {
 
 // Session Setup ==============================================================
 // Needed for persistent logins
