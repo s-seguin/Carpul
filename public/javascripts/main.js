@@ -126,7 +126,13 @@ function checkFieldValidation() {
             capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
            ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput};
 
-  originInput, destinationInput, dateInput, timeInput, capacity, priceInput = "";
+  $('#newRideModal').modal('toggle');
+  document.getElementById("origin-input").value = '';
+  document.getElementById("destination-input").value = '';
+  document.getElementById("dateInput").value = '';
+  document.getElementById("timeInput").value = '';
+  document.getElementById("capInput").value = '';
+  document.getElementById("priceInput").value = '';
 
   return {validInputs: true, formData: formData};
 }

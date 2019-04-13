@@ -150,7 +150,7 @@ module.exports = function(passport, server) {
               mapObjs.push(item);
             });
             console.log("Sending " + mapObjs.length + " maps");
-            socket.emit('sendMapsToClient', mapObjs);
+            io.emit('sendMapsToClient', mapObjs);
           } else {
             console.log("there was an error: " + err);
             console.log(mapObjs);
