@@ -92,8 +92,7 @@ function checkFieldValidation() {
   //embeddedMap done server side
   //directions_obj is useless
   let rideDate = dateInput + ' ' + timeInput + ':00';
-  console.log(rideDate);
-  let formData = {start_location: originInput, end_location: destinationInput, expire: "",
+  let formData = {user_id: user_id, start_location: originInput, end_location: destinationInput, expire: "",
                 capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
                  directions_obj: "", ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput}
   return {validInputs: true, formData: formData};

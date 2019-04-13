@@ -29,7 +29,7 @@ function insertIntoDB(rideObj) {
   //TODO: Remove hard coded values and use real value from users
   console.log("Insert into DB");
   dbClient.query(
-      `INSERT INTO ride(user_id, start_location, end_location, expire, capacity, available, embedded_map, directions_obj, ride_date, created_on, price_per_seat) VALUES (${2}, '${rideObj.start_location}','${rideObj.end_location}','${rideObj.expire}',${rideObj.capacity},${rideObj.available},'${rideObj.embeddedMapString}','${rideObj.directions_obj}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
+      `INSERT INTO ride(user_id, start_location, end_location, expire, capacity, available, embedded_map, directions_obj, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}','${rideObj.expire}',${rideObj.capacity},${rideObj.available},'${rideObj.embeddedMapString}','${rideObj.directions_obj}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
       (err, res) => {
         if (res) {
           console.log(res);
@@ -123,15 +123,12 @@ module.exports = function(passport, server) {
     socket.on('sendNewMapToServer', function(rideFormData){
       //TODO: get user id from session and store in rideObj
 
-      let rideObj = rideFormData
-      rideObj.user_id = socket.user_id;
-
+      let rideObj = rideFormData;
       rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+rideFormData.originPlaceId+"&destination=place_id:"+rideFormData.destinationPlaceId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
       rideObj.directions_obj = ""
       rideObj.expire = ""
 
       //Send this map right back to the client
-      //// TODO: Insert this into the database
       insertIntoDB(rideObj);
 
       console.log("sending: " + JSON.stringify(rideObj) );
