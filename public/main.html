@@ -46,7 +46,7 @@
           data-target="#userPageModal">
           <img src="images/user.png">
       </a>
-      <input type="text" placeholder="Search for a different ride..">
+      <input type="text" placeholder="Search for a different ride.." id="searchBar">
     </nav>
     <div class="container-fluid">
 
@@ -313,4 +313,23 @@
       </div>
     </div>
   </body>
+  <script>
+    const searchRequest = document.getElementById("searchBar");
+    searchRequest.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+          var searchValue = searchRequest.value;
+          console.log(searchValue);
+          searchRender(searchValue);
+          //then pull the string from destination strings
+          //this is where you would call the re-render function with the searchValue as a parameter.
+          var destList = ["I", "am", "the", "Senate"];
+          for (var j = 0; j < destList.length; j++) {
+            dest = destList[j];
+            if(dest.includes(searchValue)){
+              console.log("match");
+            }
+          }
+        }
+    });
+  </script>
 </html>

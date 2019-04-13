@@ -31,7 +31,7 @@ $(function()  {
     $('#testMap iframe').attr('src', rideObj.embeddedMapString);
     var expDate = new Date(rideObj.expire);
     console.log(expDate);
-    $('#testMap h3').text('Driver: ' + rideObj.driver + ' 0 Stars');
+    $('#testMap h3').text('Driver: ' + rideObj.driver + '0 Stars');
     $('#testMap h3:last').text('Departure: ' + expDate.getHours() + ":" + expDate.getMinutes()
     + ' with ' + rideObj.capacity + ' seats left');
   });
@@ -176,3 +176,14 @@ AutocompleteDirectionsHandler.prototype.route = function () {
               });
           })
 };
+
+// const node = document.getElementById("searchBar");
+// node.addEventListener("keyup", function(event) {
+//     if (event.key === "Enter") {
+//         console.log("search enter");
+//     }
+// });
+
+function searchRender(searchValue){
+  console.log("Search: " + searchValue);
+}
