@@ -40,13 +40,18 @@ $(function()  {
     }
   });
   socket.on("sendEmbeddedMap", function (rideObj) {
-    console.log("Embedded map received: " + rideObj.embeddedMapString);
-    $('#testMap iframe').attr('src', rideObj.embeddedMapString);
-    var expDate = new Date(rideObj.expire);
-    console.log(expDate);
-    $('#testMap h2').text('Driver: ' + rideObj.user_id);
-    $('#testMap h2:last').text('Departure: ' + rideObj.ride_time
-    + ' with ' + rideObj.available + ' seats left');
+    var column =
+      '<div class="col-sm-4">' +
+        '<div class="col-sm-12 well">' +
+          '<iframe frameborder="0" style="border:0" src="' + rideObj.embeddedMapString +
+          '" allowfullscreen></iframe>' +
+          '<div class="ride-body">' +
+            '<h4>Driver: ' + name + '</h4>' +
+            '<h5>Departure: ' + rideObj.ride_date + '</h5>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    $('#exploreRow').prepend($(column));
   });
 });
 

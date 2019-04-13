@@ -149,6 +149,7 @@ module.exports = function(passport, server) {
             mapObjs = [];
             res.rows.forEach((item) => {
               mapObjs.push(item);
+              console.log(item);
             });
             console.log("Sending " + mapObjs.length + " maps");
             socket.emit('sendMapsToClient', mapObjs);
