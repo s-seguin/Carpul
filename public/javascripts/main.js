@@ -39,6 +39,22 @@ $(function()  {
       console.log("Done drawing maps");
     }
   });
+  socket.on('sendMyRidesToClient', function(maps){
+    i=0;
+    console.log("received " + maps.length + " ride the user has been apart of from server");
+    try{
+      for(let index in maps){
+        let pastRide = '<li> ' + maps[index].ride_date + '<br>' +
+        'From: ' + maps[index].start_location + "<br>" +
+        'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat + '</li>';
+        $('#myRidesList').append($(pastRide));
+      }
+    } catch (e){
+      console.log(e);
+    } finally {
+      console.log("Done getting my rides from server");
+    }
+  })
   socket.on("sendEmbeddedMap", function (rideObj) {
     var column =
       '<div class="col-sm-4">' +
@@ -126,7 +142,13 @@ function checkFieldValidation() {
             capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
            ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput};
 
-  originInput, destinationInput, dateInput, timeInput, capacity, priceInput = "";
+  $('#newRideModal').modal('toggle');
+  document.getElementById("origin-input").value = '';
+  document.getElementById("destination-input").value = '';
+  document.getElementById("dateInput").value = '';
+  document.getElementById("timeInput").value = '';
+  document.getElementById("capInput").value = '';
+  document.getElementById("priceInput").value = '';
 
   return {validInputs: true, formData: formData};
 }
