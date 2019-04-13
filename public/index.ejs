@@ -121,4 +121,14 @@
         </div>
     </div>
 </div>
+<script>
+  const searchRequest = document.getElementById("searchBar");
+  searchRequest.addEventListener("keyup", function(event) {
+      if (event.key === "Enter") {
+        var searchValue = searchRequest.value;
+        console.log(searchValue);
+        searchRender(searchValue);
+      }
+  });
+</script>
 </html>
