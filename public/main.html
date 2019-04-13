@@ -12,7 +12,7 @@
     <script type="text/javascript">
       var name = '<%= name %>'; //init var for main.js
       var user_id = '<%= user_id %>';
-      console.log('<%= email  %> <%= lname %> <%= phone %>'); //log ejs values for debggerino
+      console.log('<%= email  %> <%= user_id %> <%= phone %>'); //log ejs values for debggerino
     </script>
     <!-- Latest compiled JavaScript -->
     <script type="text/javascript" src="javascripts/main.js"></script>
@@ -72,18 +72,18 @@
                   <input class="controls" id="destination-input" placeholder="Enter a destination location"
                          type="text">
                   <div class="selector-images" >
-                    <img alt="Driver" class="ride-selector" id="imgDriver" onclick="switchSelectedRole(this.id)" src="images/car.png">
+                    <img alt="Driver" class="ride-selector" id="imgDriver" src="images/car.png">
                   </div>
 
                   <div id="driver-form-elements">
-                    <span class="detail-span" id="destinationTime"> Destination time: <input id="destinationInput" class="rideDetailsInput" type="time"></span>
+                    <span class="detail-span" id="departureDate"> Ride date: <input id="dateInput" class="rideDetailsInput" type="date"></span>
+                    <span class="detail-span" id="departureTime"> Departure: <input id="timeInput" class="rideDetailsInput" type="time"></span>
                     <span class="detail-span" id="capacity"> Capacity: <input id="capInput" class="rideDetailsInput" placeholder="# of open seats" maxlength="1" pattern="\d*"
                                                                                                   size="1" type="text"></span>
                     <span class="detail-span" id="price"> Price: $ <input id="priceInput" class="rideDetailsInput" placeholder="$$$/seat" maxlength="6" pattern="\d*"
                                                                                             size="6" type="text"></span>
                   </div>
-
-                  <button class="ride-detail-element search">Post</button>
+                  <button class="ride-detail-element" id="btnPostRide" onclick="postRide()">Post Ride</button>
                 </div>
                 <div class="col-sm-8" id="map"></div>
               </div>
@@ -94,12 +94,6 @@
                 </div>
               </div>
             </div>
-              <footer>
-                <span>Icon made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com"
-                                                                                            title="Flaticon">www.flaticon.com</a>&nbsp;</span>
-                <div>Icon made by <a href="https://www.flaticon.com/authors/pixel-buddha" title="Pixel Buddha">Pixel Buddha</a> from
-                  <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-              </footer>
               <script async
                       defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"></script>
               <!-- Test Portion for Embedded Map -->
@@ -215,101 +209,7 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-sm-4" id='testMap'>
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="col-sm-12 well">
-            <iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
-            <div class="ride-body">
-              <h3>Start Location: Starbucks</h3>
-              <h4>Destination: University of Calgary</h4>
-              <h5>Departure: 10:20 am</h5>
-            </div>
-          </div>
-        </div>
+      <div class="row" id="exploreRow">
       </div>
     </div>
   </body>
