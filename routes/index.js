@@ -131,7 +131,7 @@ module.exports = function(passport, server) {
       insertIntoDB(rideObj);
 
       console.log("sending: " + JSON.stringify(rideObj) );
-      socket.emit('sendEmbeddedMap', rideObj);
+      io.emit('sendEmbeddedMap', rideObj);
     });
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
