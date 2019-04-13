@@ -6,7 +6,7 @@ socket.on('connect', function(){
 
 $(function()  {
   console.log('init. Getting maps from server');
-  socket.emit('getMapsFromServer');
+
   socket.on('sendMapsToClient', function(maps){
     i=0;
     try {
@@ -49,13 +49,18 @@ $(function()  {
     }
   })
   socket.on("sendEmbeddedMap", function (rideObj) {
-    console.log("Embedded map received: " + rideObj.embeddedMapString);
-    $('#testMap iframe').attr('src', rideObj.embeddedMapString);
-    var expDate = new Date(rideObj.expire);
-    console.log(expDate);
-    $('#testMap h2').text('Driver: ' + rideObj.user_id);
-    $('#testMap h2:last').text('Departure: ' + rideObj.ride_time
-    + ' with ' + rideObj.available + ' seats left');
+    var column =
+      '<div class="col-sm-4">' +
+        '<div class="col-sm-12 well">' +
+          '<iframe frameborder="0" style="border:0" src="' + rideObj.embeddedMapString +
+          '" allowfullscreen></iframe>' +
+          '<div class="ride-body">' +
+            '<h4>Driver: ' + name + '</h4>' +
+            '<h5>Departure: ' + rideObj.ride_date + '</h5>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    $('#exploreRow').prepend($(column));
   });
 });
 
@@ -126,9 +131,12 @@ function checkFieldValidation() {
   //embeddedMap done server side
   //directions_obj is useless
   let rideDate = dateInput + ' ' + timeInput + ':00';
-  let formData = {user_id: user_id, start_location: originInput, end_location: destinationInput, expire: "",
-                capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
-                 directions_obj: "", ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput}
+  let formData = {user_id: user_id, start_location: originInput, end_location: destinationInput,
+            capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
+           ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput};
+
+  originInput, destinationInput, dateInput, timeInput, capacity, priceInput = "";
+
   return {validInputs: true, formData: formData};
 }
 
