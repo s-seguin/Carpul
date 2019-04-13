@@ -50,7 +50,7 @@ module.exports = function (passport) {
 
             function (req, email, password, done) {
 
-                console.log("[Auth] checking if user is logged in for email: " + email + " password " + password);
+                //console.log("[Auth] checking if user is logged in for email: " + email + " password " + password);
 
                 dbClient.query(
                     "SELECT * FROM account WHERE EMAIL= $1", [email],
@@ -127,7 +127,7 @@ module.exports = function (passport) {
                                                 lname: additionalData[2],
                                                 phone: additionalData[3]
                                             };
-                                            console.log("User: " + JSON.stringify(user));
+                                            //console.log("User: " + JSON.stringify(user));
                                             return done(null, user);
                                         } else {
                                             console.log("There was an error inserting user into database");
