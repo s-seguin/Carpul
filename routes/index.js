@@ -165,7 +165,7 @@ module.exports = function(passport, server) {
               mapObjs.push(item);
             });
             console.log("Sending " + mapObjs.length + " maps");
-            socket.emit('sendMapsToClient', mapObjs);
+            io.emit('sendMapsToClient', mapObjs);
           } else {
             console.log("there was an error: " + err);
             console.log(mapObjs);
@@ -212,6 +212,27 @@ module.exports = function(passport, server) {
       socket.username = data.name;
       socket.user_id = data.user_id;
       console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
+    });
+    socket.on('getMyRidesFromServer', function(){
+      let mapObjs = null;
+      dbClient.query(
+        "SELECT * FROM ride WHERE user_id=$1",[socket.user_id],
+        (err, res) => {
+          if (res) {
+            console.log("num rows from getMyRides query " + res.rows.length);
+            mapObjs = [];
+            res.rows.forEach((item) => {
+              mapObjs.push(item);
+            });
+            console.log("Sending " + mapObjs.length + " maps");
+            socket.emit('sendMyRidesToClient', mapObjs);
+          } else {
+            console.log("there was an error: " + err);
+            console.log(mapObjs);
+            socket.emit('sendMapsToClient', mapObjs);
+          }
+        }
+      );
     });
     /*---------------
     Ping temp code
