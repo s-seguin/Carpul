@@ -8,7 +8,7 @@ module.exports = function(passport) {
     });
 
     router.post('/', passport.authenticate('local-register', {
-        successRedirect : '/', // redirect to the secure profile section
+        successRedirect : '/users', // redirect to the secure profile section
         failureRedirect : '/register', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
