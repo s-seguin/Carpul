@@ -43,7 +43,7 @@
                 <img src="images/user.png">
             </a>
 
-            <input type="text" placeholder="Search for a different ride..">
+            <input type="text" placeholder="Search for a different ride.." id="searchBar">
         </nav>
         <div class="container-fluid" id="mainViewer">
         </div>
@@ -127,6 +127,7 @@
       if (event.key === "Enter") {
         var searchValue = searchRequest.value;
         console.log(searchValue);
+        renderSearch(searchValue);
         searchRender(searchValue);
       }
   });

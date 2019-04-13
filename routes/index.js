@@ -161,6 +161,37 @@ module.exports = function(passport, server) {
       //Turns each link into an element of an array
       console.log("Waiting for DB response");
     });
+
+    // search function
+      socket.on('getMapsFromServerSearch', function(searchValue){
+        let mapObjs = null;
+        let timeOfQuery = new Date();
+        console.log("Querying the database and make a list of non expired Maps");
+        console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
+        let testTime = "2019-04-11T19:15:44";
+        console.log(testTime + "---" + timeOfQuery);
+        dbClient.query(
+          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+          (err, res) => {
+            if (res) {
+              console.log("num rows from query " + res.rows.length);
+              mapObjs = [];
+              res.rows.forEach((item) => {
+                mapObjs.push(item);
+              });
+              console.log("Sending " + mapObjs.length + " maps");
+              socket.emit('sendMapsToClientSearch', mapObjs);
+            } else {
+              console.log("there was an error: " + err);
+              console.log(mapObjs);
+              socket.emit('sendMapsToClientSearch', mapObjs);
+            }
+          }
+        );
+        //Turns each link into an element of an array
+        console.log("Waiting for DB response");
+      });
+
     socket.on('register', function(data){
       console.log('Register event. User_id ' + data.user_id + " is " + data.name);
       socket.username = data.name;
