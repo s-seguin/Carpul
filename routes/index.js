@@ -152,7 +152,7 @@ module.exports = function(passport, server) {
       insertIntoDB(rideObj);
 
       console.log("sending: " + JSON.stringify(rideObj) );
-      socket.emit('sendEmbeddedMap', rideObj);
+      io.emit('sendEmbeddedMap', rideObj);
     });
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
@@ -171,7 +171,7 @@ module.exports = function(passport, server) {
               mapObjs.push(item);
             });
             console.log("Sending " + mapObjs.length + " maps");
-            socket.emit('sendMapsToClient', mapObjs);
+            io.emit('sendMapsToClient', mapObjs);
           } else {
             console.log("there was an error: " + err);
             console.log(mapObjs);
