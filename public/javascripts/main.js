@@ -15,9 +15,11 @@ $(function()  {
           '<div class="col-sm-4">' +
             '<div class="col-sm-12 well">' +
               '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
-              '<div class="ride-body">' +
+              '<div class="ride-body" type="button" data-id="' + maps[index].ride_id +
+              '" data-toggle="modal" data-target="#rideDetailModal">' +
                 '<h4>Driver: ' + maps[index].fname+ '</h4>' +
                 '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
+                '<p id="r_id" value=' + maps[index] + ' hidden></p>' +
               '</div>' +
             '</div>' +
           '</div>'
@@ -43,15 +45,24 @@ $(function()  {
     var column =
       '<div class="col-sm-4">' +
         '<div class="col-sm-12 well">' +
-          '<iframe frameborder="0" style="border:0" src="' + rideObj.embeddedMapString +
+          '<iframe frameborder="0" style="border:0" src="' + rideObj.embedded_map +
           '" allowfullscreen></iframe>' +
-          '<div class="ride-body">' +
+          '<div class="ride-body" type="button" data-id="' + rideObj.ride_id +
+          '" data-toggle="modal" data-target="#rideDetailModal">' +
             '<h4>Driver: ' + name + '</h4>' +
             '<h5>Departure: ' + rideObj.ride_date + '</h5>' +
+            '<p id="r_id" value=' + rideObj + ' hidden></p>' +
           '</div>' +
         '</div>' +
       '</div>'
     $('#exploreRow').prepend($(column));
+  });
+
+  $(document).on("click", ".ride-body", function() {
+    var rideId = $(this).data('id');
+    console.log($('#ride-detail-id').val());
+    console.log('HEREEEEEE:::::' + JSON.stringify(document.getElementById('ride-detail-id')));
+    $('#ride-detail-id').val(rideId);
   });
 });
 
@@ -259,9 +270,11 @@ function searchRender(searchValue){
             '<div class="col-sm-4">' +
               '<div class="col-sm-12 well">' +
                 '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
-                '<div class="ride-body">' +
+                '<div class="ride-body" type="button" data-id="' + maps[index].ride_id +
+                '" data-toggle="modal" data-target="#rideDetailModal">' +
                   '<h4>Driver: ' + maps[index].fname+ '</h4>' +
                   '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
+                  '<p id="r_id" value=' + maps[index] + ' hidden></p>' +
                 '</div>' +
               '</div>' +
             '</div>'

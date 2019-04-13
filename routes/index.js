@@ -29,7 +29,7 @@ function insertIntoDB(rideObj) {
   //TODO: Remove hard coded values and use real value from users
   console.log("Insert into DB");
   dbClient.query(
-      `INSERT INTO ride(user_id, start_location, end_location, capacity, available, embedded_map, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}',${rideObj.capacity},${rideObj.available},'${rideObj.embeddedMapString}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
+      `INSERT INTO ride(user_id, start_location, end_location, capacity, available, embedded_map, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}',${rideObj.capacity},${rideObj.available},'${rideObj.embedded_map}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
       (err, res) => {
         if (res) {
           console.log(res);
@@ -103,10 +103,10 @@ module.exports = function(passport, server) {
       var origin = obj.origin.placeId;
       var destination = obj.destination.placeId;
       console.log("origin: " + origin);
-      var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
+      var embedded_map = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
 
       var fs = require('fs');
-      fs.appendFile("routes\\embeddedMaps.txt", embeddedMapString+"\n", function(err) {
+      fs.appendFile("routes\\embeddedMaps.txt", embedded_map+"\n", function(err) {
         if (err) {
           console.log(err);
         }
@@ -125,13 +125,28 @@ module.exports = function(passport, server) {
       //TODO: get user id from session and store in rideObj
 
       let rideObj = rideFormData;
-      rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+rideFormData.originPlaceId+"&destination=place_id:"+rideFormData.destinationPlaceId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
+      rideObj.embedded_map = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+rideFormData.originPlaceId+"&destination=place_id:"+rideFormData.destinationPlaceId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
 
       //Send this map right back to the client
       insertIntoDB(rideObj);
 
-      console.log("sending: " + JSON.stringify(rideObj) );
-      socket.emit('sendEmbeddedMap', rideObj);
+      dbClient.query(
+          'SELECT r.ride_id FROM ride r INNER JOIN (' +
+              'SELECT MAX(created_on) created_on FROM ride' +
+          ') c ON r.created_on=c.created_on ' +
+          'WHERE r.embedded_map=$1', [rideObj.embedded_map],
+          (err, res) => {
+            if (res) {
+              res.rows.forEach((item) => {
+                rideObj.ride_id = item.ride_id;
+                console.log("sending: " + JSON.stringify(rideObj));
+                socket.emit('sendEmbeddedMap', rideObj);
+              });
+            } else {
+              console.log("There was an error grabbing ride_id for latest post: " + err);
+            }
+          }
+      );
     });
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
