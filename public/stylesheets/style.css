@@ -41,7 +41,7 @@ h3, h4, h5 {
   padding-left: 5%;
 }
 
-#account, #notifications, #myAccountNav {
+#myAccountNav, #notifications, #logout-icon {
   float: right;
   padding-top: 8px;
   margin: 0;
