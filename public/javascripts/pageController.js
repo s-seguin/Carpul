@@ -30,21 +30,21 @@ function renderSearch(searchValue){
 let myAccount =
     '<div id="myAccount">\n' +
     '    <div>\n' +
-    '        <h4>My Account</h4>\n' +
+    '        <h2>My Account</h2>\n' +
     '        <div>\n' +
-    '            Account Details\n' +
-    '        </div>\n' +
-    '        <div class="container-fluid">\n' +
-    '            <div class="col-sm-8" id="user-page-details">\n' +
-    '                <!-- This is where we could insert their account information  -->\n' +
-    '                <span class="account-info" id="user-page-email"> Email: <input class="account-info-box" type="text" name="account-info-email" value="'+ email + '" disabled></span>\n' +
-    '                <span class="account-info" id="user-page-fname"> First Name: <input class="account-info-box" type="text" name="account-info-fname" value="'+ name +'"disabled></span>\n' +
-    '                <span class="account-info" id="user-page-lname"> Last Name: <input class="account-info-box" type="text" name="account-info-lname" value="'+ lname +'"disabled></span>\n' +
-    '                <span class="account-info" id="user-page-phone"> Phone Number: <input class="account-info-box" type="tel" name="account-info-phone" value="'+ phone +'"disabled></span>\n' +
-    '            </div>\n' +
+    '            <h4>Account Details</h4>\n' +
     '        </div>\n' +
     '        <div class="col-sm-4" id="user-page-pic">\n' +
     '            <img id="accountPic" src="images/passenger.png">\n' +
+    '        </div>\n' +
+    '        <div class="container-fluid" id="userInfoDisplay">\n' +
+    '            <div class="col-sm-8" id="user-page-details">\n' +
+    '                <!-- This is where we could insert their account information  -->\n' +
+    '                <span class="account-info" id="user-page-email"> Email: <p class="account-info-box" name="account-info-email">'+email+'</p></span>\n' +
+    '                <span class="account-info" id="user-page-fname"> First Name: <p class="account-info-box" name="account-info-fname">'+ name +'</p></span>\n' +
+    '                <span class="account-info" id="user-page-lname"> Last Name: <p class="account-info-box" name="account-info-lname" >'+ lname +'</p></span>\n' +
+    '                <span class="account-info" id="user-page-phone"> Phone Number: <p class="account-info-box" name="account-info-phone" >'+ phone +'</p></span>\n' +
+    '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
     '</div>';
