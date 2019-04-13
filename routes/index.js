@@ -85,7 +85,8 @@ module.exports = function(passport, server) {
     // and as soon as they go to www code they will be assigened a new socket id.
     console.log(req.cookies);
     console.log(req.user);
-    res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
+    res.render('../public/index.ejs',  {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
+   // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
   ///We could likely delete this embeddedMapFunction function
@@ -148,7 +149,7 @@ module.exports = function(passport, server) {
       let testTime = "2019-04-11T19:15:44";
       console.log(testTime + "---" + timeOfQuery);
       dbClient.query(
-        "select * from ride WHERE expire >= $1 AND NOT expire = 'expire'", [timeOfQuery],
+        "select * from ride",
         (err, res) => {
           if (res) {
             console.log("num rows from query " + res.rows.length);

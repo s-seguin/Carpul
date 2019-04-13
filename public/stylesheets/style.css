@@ -36,7 +36,7 @@
   padding-left: 5%;
 }
 
-#account, #notifications {
+#account, #notifications, #myAccountNav {
   float: right;
   padding-top: 8px;
   margin: 0;
