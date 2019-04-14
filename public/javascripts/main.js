@@ -287,6 +287,9 @@ function postRide() {
 }
 
 function notificationClicked(){
+  if ($("#NotificationOn").css("display")=== "none") {
+    return;
+  }
     $("#NotificationOff").css("display", "");
     $("#NotificationOn").css("display", "none");
     renderMyRides();
