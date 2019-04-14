@@ -82,7 +82,7 @@ $(function()  {
         // 'From: ' + maps[index].start_location + "<br>" +
         // 'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat +
         // '</li>' + '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" ' +
-        // 'data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '">Delete Ride</a>';
+        // 'data-target="#Delete_RideModal" data-ride_id="' + maps[index].ride_id + '">Delete Ride</a>';
         // $('#myRidesList').append($(pastRide));
         var ridesTable = document.getElementById("myRidesTable");
         var newRow = ridesTable.insertRow(1);
@@ -95,7 +95,7 @@ $(function()  {
         newCell1.innerHTML = maps[index].start_location;
         newCell2.innerHTML = maps[index].end_location;
         newCell3.innerHTML = maps[index].price_per_seat;
-        newCell4.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
+        newCell4.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride_id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
       }
     } catch (e){
       console.log(e);
@@ -104,8 +104,8 @@ $(function()  {
     }
   });
   $(document).on("click", ".Delete_Ride", function(){
-    let upForDeletion = $(this).data("ride-id");
-    console.log('Delete ride? ' + $(this).data("ride-id"));
+    let upForDeletion = $(this).data("ride_id");
+    console.log('Delete ride? ' + $(this).data("ride_id"));
     $("#Delete_RideModal").data("ride_id", upForDeletion);
   });
   $("#Delete_Ride_Yes").click(function(){
@@ -128,7 +128,7 @@ $(function()  {
         '<div class="col-sm-12 well">' +
           '<iframe frameborder="0" style="border:0" src="' + rideObj.embedded_map +
           '" allowfullscreen></iframe>' +
-          '<div class="ride-body" type="button" data-id="' + rideObj.ride_id +
+          '<div class="ride-body" type="button" data-ride_id="' + rideObj.ride_id +
           '" data-toggle="modal" data-target="#rideDetailModal">' +
             '<h4>Driver: ' + name + '</h4>' +
             '<h5>Departure: ' + formatDate(rideObj.ride_date) + '</h5>' +
@@ -362,10 +362,10 @@ function searchRender(searchValue){
             '<div class="col-sm-4">' +
               '<div class="col-sm-12 well">' +
                 '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
-                '<div class="ride-body" type="button" data-id="' + maps[index].ride_id +
+                '<div class="ride-body" type="button" data-ride_id="' + maps[index].ride_id +
                 '" data-toggle="modal" data-target="#rideDetailModal">' +
                   '<h4>Driver: ' + maps[index].fname+ '</h4>' +
-                  '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
+                  '<h5>Departure: ' + formatDate(maps[index].ride_date) + '</h5>' +
                 '</div>' +
               '</div>' +
             '</div>'
