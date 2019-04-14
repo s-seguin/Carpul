@@ -40,17 +40,38 @@ $(function()  {
     }
   });
   socket.on('sendMyRidesToClient', function(maps){
-    $('#myRidesList').html("");
+    $('#myRidesTable').html("");
+    $('#myRidesTable').html('<thead>'+
+    '<tr>'+
+      '<th scope="col">Ride Time</th>'+
+      '<th scope="col">From</th>'+
+      '<th scope="col">To</th>'+
+      '<th scope="col">Cost</th>'+
+      '<th scope="col">Delete Ride</th>'+
+    '</tr>'+
+  '</thead>');
     i=0;
     console.log("received " + maps.length + " ride the user has been apart of from server");
     try{
       for(let index in maps){
-        let pastRide = '<li> ' + maps[index].ride_date + '<br>' +
-        'From: ' + maps[index].start_location + "<br>" +
-        'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat +
-        '</li>' + '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" ' +
-        'data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '">Delete Ride</a>';
-        $('#myRidesList').append($(pastRide));
+        // let pastRide = '<li> ' + maps[index].ride_date + '<br>' +
+        // 'From: ' + maps[index].start_location + "<br>" +
+        // 'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat +
+        // '</li>' + '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" ' +
+        // 'data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '">Delete Ride</a>';
+        // $('#myRidesList').append($(pastRide));
+        var ridesTable = document.getElementById("myRidesTable");
+        var newRow = ridesTable.insertRow(1);
+        var newCell0 = newRow.insertCell(0);
+        var newCell1 = newRow.insertCell(1);
+        var newCell2 = newRow.insertCell(2);
+        var newCell3 = newRow.insertCell(3);
+        var newCell4 = newRow.insertCell(4);
+        newCell0.innerHTML = maps[index].ride_date;
+        newCell1.innerHTML = maps[index].start_location;
+        newCell2.innerHTML = maps[index].end_location;
+        newCell3.innerHTML = maps[index].price_per_seat;
+        newCell4.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
       }
     } catch (e){
       console.log(e);
