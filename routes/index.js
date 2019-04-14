@@ -26,7 +26,7 @@ function insertIntoDB(rideObj) {
 function sendMyRidesToClient(socket){
   let mapObjs = null;
   dbClient.query(
-    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
+    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) LEFT OUTER JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
     (err, res) => {
       if (res) {
         console.log("num rows from getMyRides query " + res.rows.length);
