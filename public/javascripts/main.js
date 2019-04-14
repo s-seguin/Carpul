@@ -163,6 +163,8 @@ function checkFieldValidation() {
   let timeInput = document.getElementById("timeInput").value;
   let capacity = document.getElementById("capInput").value;
   let priceInput = document.getElementById("priceInput").value;
+  capacity = parseInt(capacity, 10);
+  priceInput = parseFloat(priceInput, 10).toFixed(2);
 
   if ((originInput === "") || (destinationInput === "")) {
     window.alert("Please ensure the ride's origin and destination fields have been set.");
@@ -174,12 +176,12 @@ function checkFieldValidation() {
     return false;
   }
 
-  else if ((typeof capacity === 'number') && (capacity % 1 === 0)) {
-    window.alert("Please ensure the vehicle's capacity has been set to a number.");
+  else if (capacity % 1 != 0 || capacity === 0) {
+    window.alert("Please ensure the vehicle's capacity has been set to a number between 1 and 9.");
     return false;
   }
-  else if (typeof priceInput === 'number') {
-    window.alert("Please ensure the price per seat value is a whole or decimal number.");
+  else if (priceInput < 0) {
+    window.alert("Please ensure the price per seat value is a whole or decimal number equal to or greater than 0.");
     return false;
   }
   //expire is a useless field
