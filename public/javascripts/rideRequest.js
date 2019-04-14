@@ -9,8 +9,14 @@ function requestRide() {
                 socket.emit('newRideRequest', ride_id);
                 alert('Your request was submitted');
             }
+            else if (returnedData === "alreadyRequested") {
+              alert('Error: You have already requested a seat for this ride.');
+            }
+            else if (returnedData === "sameId") {
+              alert('Error: You cannot request a seat on your own ride.');
+            }
             else
-                alert('Sorry we could not submit you request');
+                alert('Sorry, we could not submit your request.');
     });
 
 

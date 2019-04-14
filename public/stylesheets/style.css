@@ -20,6 +20,10 @@ h3, h4, h5 {
   font-size: 17px;
 }
 
+#searchBar {
+  width: 20%; 
+}
+
 .container-fluid {
   background-color: #F0F8FF;
 }

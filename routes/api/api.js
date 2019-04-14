@@ -56,7 +56,6 @@ module.exports = function(passport, db) {
      * Return a list of users without password data
      */
     router.get('/users', isAdmin, function(req, res, next) {
-
         dbClient.query(
             "SELECT email, fname, lname, phone, last_login, created_on FROM account",
             (err, dbRes) => {
@@ -105,25 +104,48 @@ module.exports = function(passport, db) {
         );
     });
 
-    ///todo: Cannot request spots in your own car
-    ///todo: Cannot request multiple spots in a car
     ///REQUEST
     router.post('/request/new', isLoggedIn, function(req, res, next){
+      ///Cannot request spots in your own car
         dbClient.query(
-            "INSERT INTO REQUEST(ride_id, user_id, accepted, updated_on, created_on) VALUES($1, $2, 'FALSE', Now(), Now())", [req.body.ride_id, req.user.user_id],
-            (err, dbRes) => {
-                if (dbRes) {
-                    if (!err) {
-                       // console.log(dbRes);
-                        res.sendStatus(200);
-                    } else {
-                        console.log(err.stack);
-                        res.sendStatus(500);
+          "SELECT user_id FROM ride WHERE ride_id=$1", [req.body.ride_id],
+          (err, dbRes) => {
+            if (dbRes && dbRes.rowCount > 0) {
+              console.log(dbRes.rows[0]);
+              if (!(req.user.user_id == dbRes.rows[0].user_id)) {
+                  ///todo: Cannot request multiple spots in a car
+                  dbClient.query(
+                    "SELECT user_id FROM request WHERE ride_id=$1 and user_id=$2", [req.body.ride_id, req.user.user_id],
+                    (err, dbRes) => {
+                      if (dbRes && dbRes.rowCount == 0) {
+                        dbClient.query(
+                            "INSERT INTO REQUEST(ride_id, user_id, updated_on, created_on) VALUES($1, $2, Now(), Now())", [req.body.ride_id, req.user.user_id],
+                            (err, dbRes) => {
+                                if (dbRes) {
+                                    if (!err) {
+                                       // console.log(dbRes);
+                                        res.sendStatus(200);
+                                    } else {
+                                        console.log(err.stack);
+                                        res.sendStatus(500);
+                                    }
+                                } else {
+                                    res.sendStatus(500);
+                                }
+                            }
+                        );
+                      } else {
+                        res.send("alreadyRequested");
+                      }
                     }
-                } else {
-                    res.sendStatus(500);
-                }
+                  );
+              } else {
+                  res.send("sameId");
+              }
+            } else {
+                res.sendStatus(500);
             }
+          }
         );
     });
 
