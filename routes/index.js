@@ -68,19 +68,6 @@ function sendMyPassengerRidesToClient(socket){
   );
 }
 
-///TESTING to make sure the thing inserted
-function selectAllFromRide() {
-  dbClient.query(
-      "select * from ride",
-      (err, res) => {
-        if (res) {
-          res.rows.forEach((item) => console.log(item));
-        } else {
-          console.log("There was an error inserting user into database " + err);
-        }
-      }
-  );
-}
 
   // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
@@ -186,7 +173,7 @@ module.exports = function(passport, server, db) {
       let mapObjs = null;
       // console.log("Querying the database and make a list of non expired Maps");
       dbClient.query(
-        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= Now() ORDER BY r.ride_date",
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= Now() AND r.available > 0 ORDER BY r.ride_date",
         (err, res) => {
           if (res) {
             //console.log("num rows from query " + res.rows.length);
@@ -229,7 +216,7 @@ module.exports = function(passport, server, db) {
         let timeOfQuery = new Date();
         console.log("Querying the database and make a list of non expired Maps");
         dbClient.query(
-          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
+          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1 and r.available > 0",[timeOfQuery],
           (err, res) => {
             if (res) {
               console.log("num rows from query " + res.rows.length);
