@@ -55,7 +55,7 @@ let myRides = '<div>My Rides: ' +
               '</div>';
 
 let mainPage =
-    '<h1>Destination: University of Calgary</h1>' +
+    '<h1>Available Rides:</h1>' +
     '<div class="row" id="exploreRow"> </div>';
 
 let searchPage =
