@@ -219,6 +219,20 @@ display: inline-block;
   border-color: darkgray;
 }
 
+.rdmText {
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 14 pt;
+  padding: 0 11px 0 13px;
+}
+
+.rdmHeader {
+  font-size: 15pt;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .controls:focus {
   border-color: #4d90fe;
 }
