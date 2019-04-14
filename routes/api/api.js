@@ -3,6 +3,17 @@ var router = express.Router();
 
 var dbClient;
 
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated())
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/login');
+}
+
 function isAdmin(req, res, next) {
 
     // if user is authenticated in the session, carry on
@@ -41,7 +52,9 @@ module.exports = function(passport, db) {
     dbClient = db;
 
 
-    /* GET users listing. */
+    /***
+     * Return a list of users without password data
+     */
     router.get('/users', isAdmin, function(req, res, next) {
 
         dbClient.query(
@@ -66,8 +79,10 @@ module.exports = function(passport, db) {
 
     });
 
+    /***
+     * Delete a user through a post request
+     */
     router.post('/user/delete', isAdmin, function(req, res, next) {
-        console.log(req.body.email);
 
         dbClient.query(
             "DELETE FROM account where EMAIL=$1", [req.body.email],
@@ -88,10 +103,39 @@ module.exports = function(passport, db) {
                 }
             }
         );
-
-        //res.send("Deleting " + req.body.email);
     });
 
+
+    ///REQUEST
+    router.post('request/new', isLoggedIn, function(req, res, next){
+        dbClient.query(
+            "INSERT INTO REQUEST() FROM account where EMAIL=$1", [req.body.email],
+            (err, dbRes) => {
+                if (dbRes) {
+                    if (!err) {
+                        //res.rows.forEach((item) => console.log(item));
+                        //console.log("RESULT::::" + dbRes.rows[0]);
+                        //return res.send({data: dbRes.rows, requester:req.user.email});; //there should only be one match
+                        console.log(dbRes);
+                        res.sendStatus(200);
+                    } else {
+                        console.log(err.stack);
+                        res.sendStatus(500);
+                    }
+                } else {
+                    res.sendStatus(500);
+                }
+            }
+        );
+    });
+
+    router.post('request/accept', isLoggedIn, function(req, res, next){
+
+    });
+
+    router.post('request/decline', isLoggedIn, function(req, res, next){
+
+    });
 
     return router;
 };
