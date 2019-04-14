@@ -172,7 +172,7 @@ module.exports = function(passport, server, db) {
               res.rows.forEach((item) => {
                 rideObj.ride_id = item.ride_id;
                 console.log("sending: " + JSON.stringify(rideObj));
-                socket.emit('sendEmbeddedMap', rideObj);
+                io.emit('sendEmbeddedMap', rideObj);
               });
             } else {
               console.log("There was an error grabbing ride_id for latest post: " + err);
@@ -183,21 +183,21 @@ module.exports = function(passport, server, db) {
 
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
-      console.log("Querying the database and make a list of non expired Maps");
+      // console.log("Querying the database and make a list of non expired Maps");
       dbClient.query(
         "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= Now() ORDER BY r.ride_date",
         (err, res) => {
           if (res) {
-            console.log("num rows from query " + res.rows.length);
+            //console.log("num rows from query " + res.rows.length);
             mapObjs = [];
             res.rows.forEach((item) => {
               mapObjs.push(item);
             });
-            console.log("Sending " + mapObjs.length + " maps");
-            io.emit('sendMapsToClient', mapObjs);
+           // console.log("Sending " + mapObjs.length + " maps");
+            socket.emit('sendMapsToClient', mapObjs);
           } else {
             console.log("there was an error: " + err);
-            console.log(mapObjs);
+            // console.log(mapObjs);
             socket.emit('sendMapsToClient', mapObjs);
           }
         }
