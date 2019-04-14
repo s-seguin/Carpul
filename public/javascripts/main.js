@@ -67,7 +67,7 @@ $(function()  {
         var newCell2 = newRow.insertCell(2);
         var newCell3 = newRow.insertCell(3);
         var newCell4 = newRow.insertCell(4);
-        newCell0.innerHTML = maps[index].ride_date;
+        newCell0.innerHTML = formatDate(maps[index].ride_date);
         newCell1.innerHTML = maps[index].start_location;
         newCell2.innerHTML = maps[index].end_location;
         newCell3.innerHTML = maps[index].price_per_seat;
