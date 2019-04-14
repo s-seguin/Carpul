@@ -89,16 +89,15 @@ $(function()  {
                   "<thead>" +
                   "<tr>" +
                   "<th>email</th>" +
-                  "<th>accept</th>" +
-                  "<th>decline</th>" +
+                  "<th>status</th>" +
                   "</tr>" +
                   "</thead>" +
                   "<tbody>";
               for (let r in requests) {
                   passengerTable += "<tr>";
                   passengerTable += "<td>" + requests[r].email+ "</td>";
-                  passengerTable += "<td><button>accept</button></td>";
-                  passengerTable += "<td><button>decline</button></td>";
+                  passengerTable += "<td><div class='btn-group text-nowrap'><button>accept</button>";
+                  passengerTable += "<button>decline</button></div></td>";
               }
               passengerTable += "</tbody></table>";
 
