@@ -90,6 +90,9 @@ h3, h4, h5 {
   border-style: none;
   background-color: #F0F8FF;
 }
+.account-info{
+    max-width: 70%;
+}
 
 /* Change the color of links on hover */
 .topnav a:hover {
@@ -256,5 +259,15 @@ display: inline-block;
   }
   .topnav input[type=text] {
     border: 1px solid #ccc;
+  }
+  .account-info{
+      max-width: 100%;
+  }
+}
+@media screen and (max-width: 802px) and (min-width: 601px){
+  .topnav input[type=text] {
+    width: 50%;
+    margin-left: 50%;
+    margin-right: 0;
   }
 }
