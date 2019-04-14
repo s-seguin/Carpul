@@ -4,7 +4,7 @@ var router = express.Router();
 var dbClient;
 
 let notificationCenter = [];
-
+var io;
 /***
  * Insert a new ride into the Ride table
  * @param rideObj
@@ -22,12 +22,12 @@ function insertIntoDB(rideObj) {
         }
       }
   );
-  //dbClient.close();
 }
 function sendMyRidesToClient(socket){
   let mapObjs = null;
   dbClient.query(
-    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) LEFT OUTER JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
+    // "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) LEFT OUTER JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
+    "SELECT ride.ride_id, ride.user_id, ride.ride_date, ride.start_location, ride.end_location, ride.price_per_seat, ride.available, request.request_id, request.accepted, account.email FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) LEFT OUTER JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1", [socket.user_id],
     (err, res) => {
       if (res) {
         console.log("num rows from getMyRides query " + res.rows.length);
@@ -96,6 +96,7 @@ function isLoggedIn(req, res, next) {
 module.exports = function(passport, server, db) {
   dbClient = db;
   var savedUsername = null;
+  io = require('socket.io')(server);
 
   router.get('/main', isLoggedIn, function(req, res, next) {
     res.redirect('/');
@@ -116,7 +117,6 @@ module.exports = function(passport, server, db) {
    // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
-  var io = require('socket.io')(server);
 
   io.on('connection', function(socket){
     console.log("New Connection from " + socket.id);
@@ -173,7 +173,7 @@ module.exports = function(passport, server, db) {
               res.rows.forEach((item) => {
                 rideObj.ride_id = item.ride_id;
                 console.log("sending: " + JSON.stringify(rideObj));
-                socket.emit('sendEmbeddedMap', rideObj);
+                io.emit('sendEmbeddedMap', rideObj);
               });
             } else {
               console.log("There was an error grabbing ride_id for latest post: " + err);
@@ -184,22 +184,21 @@ module.exports = function(passport, server, db) {
 
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
-      let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
-      console.log("Querying the database and make a list of non expired Maps");
+      // console.log("Querying the database and make a list of non expired Maps");
       dbClient.query(
-        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= Now() ORDER BY r.ride_date",
         (err, res) => {
           if (res) {
-            console.log("num rows from query " + res.rows.length);
+            //console.log("num rows from query " + res.rows.length);
             mapObjs = [];
             res.rows.forEach((item) => {
               mapObjs.push(item);
             });
-            console.log("Sending " + mapObjs.length + " maps");
-            io.emit('sendMapsToClient', mapObjs);
+           // console.log("Sending " + mapObjs.length + " maps");
+            socket.emit('sendMapsToClient', mapObjs);
           } else {
             console.log("there was an error: " + err);
-            console.log(mapObjs);
+            // console.log(mapObjs);
             socket.emit('sendMapsToClient', mapObjs);
           }
         }
