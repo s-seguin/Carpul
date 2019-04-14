@@ -12,7 +12,8 @@ function insertIntoDB(rideObj) {
   //TODO: Remove hard coded values and use real value from users
   console.log("Insert into DB");
   dbClient.query(
-      `INSERT INTO ride(user_id, start_location, end_location, capacity, available, embedded_map, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}',${rideObj.capacity},${rideObj.available},'${rideObj.embedded_map}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
+      `INSERT INTO ride(user_id, start_location, end_location, capacity, available, embedded_map, ride_date, created_on, price_per_seat) VALUES ($1, $2, $3, $4, $5, $6, (TIMESTAMP '${rideObj.ride_date}'), Now(), $7);`,
+      [rideObj.user_id, rideObj.start_location, rideObj.end_location, rideObj.capacity, rideObj.available, rideObj.embedded_map, rideObj.price_per_seat],
       (err, res) => {
         if (res) {
           console.log(res);
