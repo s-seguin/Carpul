@@ -15,6 +15,7 @@ function renderMyRides(){
     $('#myRidesNav').addClass('active');
     $('#mainViewer').html(myRides);
     socket.emit('getMyRidesFromServer');
+    socket.emit('getMyPassengerRidesFromServer');
 }
 
 function renderMyAccount(){
@@ -73,6 +74,7 @@ let myRides = '<div><h3>My Rides: </h3>' +
               '<th scope="col">From</th>'+
               '<th scope="col">To</th>'+
               '<th scope="col">Cost</th>'+
+              '<th scope="col">Status</th>'+
             '</tr>'+
           '</thead> </table>'
 

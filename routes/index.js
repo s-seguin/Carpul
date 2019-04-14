@@ -46,6 +46,28 @@ function sendMyRidesToClient(socket){
   );
 }
 
+function sendMyPassengerRidesToClient(socket){
+  let passengerObjs = null;
+  dbClient.query(
+    "(SELECT * FROM request JOIN account ON (account.user_id = request.user_id) JOIN ride ON (request.ride_id = ride.ride_id) WHERE request.user_id=$1)",[socket.user_id],
+    (err, res) => {
+      if (res) {
+        console.log("num rows from getMyPassengerRides query " + res.rows.length);
+        passengerObjs = [];
+        res.rows.forEach((item) => {
+          passengerObjs.push(item);
+        });
+        console.log("Sending " + passengerObjs.length + " maps");
+        socket.emit('sendMyPassengerRidesToClient', passengerObjs);
+      } else {
+        console.log("there was an error: " + err);
+        console.log(passengerObjs);
+        // socket.emit('sendMapsToClient', passengerObjs);
+      }
+    }
+  );
+}
+
 ///TESTING to make sure the thing inserted
 function selectAllFromRide() {
   dbClient.query(
@@ -234,6 +256,9 @@ module.exports = function(passport, server, db) {
     });
     socket.on('getMyRidesFromServer', function(){
       sendMyRidesToClient(socket);
+    });
+    socket.on('getMyPassengerRidesFromServer', function(){
+      sendMyPassengerRidesToClient(socket);
     });
     socket.on("deleteRide", function(data){
       console.log("request to delete ride " + data);
