@@ -6,9 +6,20 @@ socket.on('connect', function(){
 
 $(function()  {
   console.log('init. Getting maps from server');
+  //Had to move this to the top, or else the notification would get lost during map rendering
+  socket.on('notification', function(data){
+    console.log((typeof data), data, (typeof user_id), user_id);
+    if(data.toString() === user_id){
+      console.log("One of your rides has received an update");
+      $("#NotificationOn").css("display", "");
+      $("#NotificationOff").css("display", "none");
+      socket.emit('getMyRidesFromServer');
+      socket.emit('getMyPassengerRidesFromServer');
+    }
+  });
 
   socket.on('sendMapsToClient', function(maps){
-    i=0;
+    let i=0;
     try {
       for (let index in maps) {
         var column =
@@ -63,6 +74,7 @@ $(function()  {
 
   });
 
+  ///Todo: refresh table when ride is accepted or declined
   socket.on('sendMyRidesToClient', function(maps){
     $('#myRidesTable').html("");
     $('#myRidesTable').html('<thead>'+
@@ -71,7 +83,8 @@ $(function()  {
       '<th scope="col">From</th>'+
       '<th scope="col">To</th>'+
       '<th scope="col">Cost</th>'+
-       '<th scope="col">Passenger Requests</th>'+
+      '<th scope="col">Seats available</th>'+
+      '<th scope="col">Passenger Requests</th>'+
       '<th scope="col">Delete Ride</th>'+
     '</tr>'+
   '</thead>');
@@ -79,6 +92,7 @@ $(function()  {
     try{
         let dupID = [];
       for(let index in maps){
+          console.log(maps);
           if (!dupID.includes(maps[index].ride_id)) {
               //get all requests for this ride
               let requests = maps.filter(e => e.ride_id === maps[index].ride_id);
@@ -93,13 +107,30 @@ $(function()  {
                   "</tr>" +
                   "</thead>" +
                   "<tbody>";
+              let noPassenger= false;
+
               for (let r in requests) {
-                  passengerTable += "<tr>";
-                  passengerTable += "<td>" + requests[r].email+ "</td>";
-                  passengerTable += "<td><div class='btn-group text-nowrap'><button>accept</button>";
-                  passengerTable += "<button>decline</button></div></td>";
+                  if (requests[r].email != null) {
+                      passengerTable += "<tr>";
+                      passengerTable += "<td>" + requests[r].email+ "</td>";
+                      if (requests[r].accepted == null) {
+                          passengerTable += "<td><div class='btn-group text-nowrap'><button onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
+                          passengerTable += "<button onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
+                      } else {
+                          if (requests[r].accepted == true)
+                              passengerTable += "<td>accepted</td>";
+                          else
+                              passengerTable += "<td>declined</td>";
+
+                      }
+                  } else {
+                      noPassenger = true;
+                  }
               }
-              passengerTable += "</tbody></table>";
+              if (noPassenger)
+                  passengerTable = "No requests";
+              else
+                passengerTable += "</tbody></table>";
 
               var ridesTable = document.getElementById("myRidesTable");
               var newRow = ridesTable.insertRow(1);
@@ -107,18 +138,19 @@ $(function()  {
               var startLocCell = newRow.insertCell(1);
               var endLocCell = newRow.insertCell(2);
               var priceCell = newRow.insertCell(3);
-              var passengerCell = newRow.insertCell(4);
-              var deleteCell = newRow.insertCell(5);
+              var seatsCell = newRow.insertCell(4)
+              var passengerCell = newRow.insertCell(5);
+              var deleteCell = newRow.insertCell(6);
 
               dateCell.innerHTML = formatDate(maps[index].ride_date);
               startLocCell.innerHTML = maps[index].start_location;
               endLocCell.innerHTML = maps[index].end_location;
               priceCell.innerHTML = maps[index].price_per_seat;
+              seatsCell.innerHTML = maps[index].available;
               passengerCell.innerHTML = passengerTable;
-              deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
+              deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride_id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
 
           }
-
       }
     } catch (e){
       console.log(e);
@@ -126,6 +158,48 @@ $(function()  {
       console.log("Done getting my rides from server");
     }
   });
+
+socket.on('sendMyPassengerRidesToClient', function(passengerFile){
+  $('#passengerRideTable').html("");
+  $('#passengerRideTable').html('<thead>'+
+    '<tr>'+
+      '<th scope="col">Ride Time</th>'+
+      '<th scope="col">From</th>'+
+      '<th scope="col">To</th>'+
+      '<th scope="col">Cost</th>'+
+      '<th scope="col">Status</th>'+
+    '</tr>'+
+  '</thead>');
+  console.log("received " + passengerFile.length + " ride the user has been passenger of from server");
+  try{
+    for(index in passengerFile){
+      var passengerTable = document.getElementById("passengerRideTable");
+      var newRow = passengerTable.insertRow(1);
+      var dateCell = newRow.insertCell(0);
+      var startLocCell = newRow.insertCell(1);
+      var endLocCell = newRow.insertCell(2);
+      var priceCell = newRow.insertCell(3);
+      var statusCell = newRow.insertCell(4);
+
+      dateCell.innerHTML = formatDate(passengerFile[index].ride_date);
+      startLocCell.innerHTML = passengerFile[index].start_location;
+      endLocCell.innerHTML = passengerFile[index].end_location;
+      priceCell.innerHTML = passengerFile[index].price_per_seat;
+      if(passengerFile[index].accepted === true){
+        statusCell.innerHTML = "Accepted";
+      } else if(passengerFile[index].accepted === false){
+        statusCell.innerHTML = "Rejected";
+      } else{
+        statusCell.innerHTML = "Pending";
+      }
+    }
+
+  }catch (e){
+    console.log(e);
+  } finally {
+    console.log("Done getting my passenger rides from server");
+  }
+});
   $(document).on("click", ".Delete_Ride", function(){
     let upForDeletion = $(this).data("ride_id");
     console.log('Delete ride? ' + $(this).data("ride_id"));
@@ -159,14 +233,6 @@ $(function()  {
         '</div>' +
       '</div>'
     $('#exploreRow').prepend($(column));
-  });
-  socket.on('notification', function(data){
-    //console.log((typeof data), data, (typeof user_id), user_id);
-    if(data.toString() === user_id){
-      console.log("One of your rides has received a request");
-      $("#NotificationOn").css("display", "");
-      $("#NotificationOff").css("display", "none");
-    }
   });
 
   $(document).on("click", ".ride-body", function() {
@@ -216,12 +282,14 @@ function postRide() {
   }
   //Here we want to send this object back to server in order for the server to save this route for later
   socket.emit("sendNewMapToServer", returnValues.formData);
+  socket.emit('getMyRidesFromServer');
 }
 
 function notificationClicked(){
   $("#NotificationOff").css("display", "");
   $("#NotificationOn").css("display", "none");
   renderMyRides();
+  socket.emit("clearNotification", user_id)
 }
 
 function checkFieldValidation() {
@@ -258,7 +326,7 @@ function checkFieldValidation() {
   let rideDate = dateInput + ' ' + timeInput + ':00';
   let formData = {user_id: user_id, start_location: originInput, end_location: destinationInput,
             capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
-           ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput};
+           ride_date: rideDate, ride_time: timeInput, created_on: Date.now(), price_per_seat: priceInput};
 
   $('#newRideModal').modal('toggle');
   document.getElementById("origin-input").value = '';

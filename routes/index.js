@@ -3,6 +3,7 @@ var router = express.Router();
 
 var dbClient;
 
+let notificationCenter = [];
 
 /***
  * Insert a new ride into the Ride table
@@ -27,7 +28,7 @@ function insertIntoDB(rideObj) {
 function sendMyRidesToClient(socket){
   let mapObjs = null;
   dbClient.query(
-    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
+    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) LEFT OUTER JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
     (err, res) => {
       if (res) {
         console.log("num rows from getMyRides query " + res.rows.length);
@@ -41,6 +42,28 @@ function sendMyRidesToClient(socket){
         console.log("there was an error: " + err);
         console.log(mapObjs);
         socket.emit('sendMapsToClient', mapObjs);
+      }
+    }
+  );
+}
+
+function sendMyPassengerRidesToClient(socket){
+  let passengerObjs = null;
+  dbClient.query(
+    "(SELECT * FROM request JOIN account ON (account.user_id = request.user_id) JOIN ride ON (request.ride_id = ride.ride_id) WHERE request.user_id=$1)",[socket.user_id],
+    (err, res) => {
+      if (res) {
+        console.log("num rows from getMyPassengerRides query " + res.rows.length);
+        passengerObjs = [];
+        res.rows.forEach((item) => {
+          passengerObjs.push(item);
+        });
+        console.log("Sending " + passengerObjs.length + " maps");
+        socket.emit('sendMyPassengerRidesToClient', passengerObjs);
+      } else {
+        console.log("there was an error: " + err);
+        console.log(passengerObjs);
+        // socket.emit('sendMapsToClient', passengerObjs);
       }
     }
   );
@@ -110,6 +133,10 @@ module.exports = function(passport, server, db) {
             console.log(res.rows.length + " Rows received");
             res.rows.forEach((item) => {
               console.log("Ride request to " + item.user_id);
+              if (!notificationCenter.includes(item.user_id.toString())) {
+                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                notificationCenter.push(item.user_id.toString());
+              }
               io.emit('notification', item.user_id);
             })
           } else {
@@ -118,6 +145,15 @@ module.exports = function(passport, server, db) {
         }
       );
     });
+    socket.on("requestAccepted", function(data){
+      console.log("Accepting Request " + data);
+      requestUpdate(data);
+
+    });
+    socket.on("requestDeclined", function(data){
+      console.log("Declining Request " + data);
+      requestUpdate(data);
+    })
 
     socket.on('sendNewMapToServer', function(rideFormData){
       //TODO: get user id from session and store in rideObj
@@ -221,9 +257,18 @@ module.exports = function(passport, server, db) {
       socket.username = data.name;
       socket.user_id = data.user_id;
       console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
+      if (notificationCenter.includes(socket.user_id.toString())) {
+        console.log("user " + socket.user_id + " has an unread notifiaction");
+        socket.emit('notification', socket.user_id);
+      } else {
+        console.log(socket.user_id + " is not in " + notificationCenter);
+      }
     });
     socket.on('getMyRidesFromServer', function(){
       sendMyRidesToClient(socket);
+    });
+    socket.on('getMyPassengerRidesFromServer', function(){
+      sendMyPassengerRidesToClient(socket);
     });
     socket.on("deleteRide", function(data){
       console.log("request to delete ride " + data);
@@ -240,15 +285,38 @@ module.exports = function(passport, server, db) {
         }
       );
     });
-    /*---------------
-    Ping temp code
-    -----------------*/
-    socket.on('pingTo', function(name){
-      socket.broadcast.emit('pinged', name);
-    });
-    /*---------------
-    Ping temp code End
-    -----------------*/
+    socket.on("clearNotification", function(data){ //data expected si user_id
+      data = data.toString();
+      let toRemove = notificationCenter.indexOf(data);
+      if (toRemove != -1) {
+        console.log("removing " + notificationCenter[toRemove] + " at index " + toRemove);
+        notificationCenter.splice(toRemove, 1);
+      } else {
+        console.log(data + " is not in " + notificationCenter);
+      }
+
+    })
+    //Function definitions that need io var
+    function requestUpdate(x){
+      console.log("Request updated for request_id", x, (typeof x));
+      dbClient.query(
+        'SELECT user_id FROM request WHERE request_id=$1',[x],
+        (err, res) => {
+          if (res) {
+            res.rows.forEach((item) => {
+              console.log("Update to " + item.user_id);
+              if (!notificationCenter.includes(item.user_id.toString())) {
+                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                notificationCenter.push(item.user_id.toString());
+              }
+              io.emit('notification', item.user_id);
+            })
+          } else {
+            console.log("there was an error: " + err);
+          }
+        }
+      );
+    }
   });
 
   return router;
