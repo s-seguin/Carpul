@@ -139,6 +139,8 @@ $(function()  {
   });
 
   $(document).on("click", ".ride-body", function() {
+    $('#rideDetailModal').data("ride_id", $(this).data("ride_id"));
+
     socket.emit('getInfoForCard', $(this).data("ride_id"));
   });
 });

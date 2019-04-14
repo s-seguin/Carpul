@@ -105,17 +105,15 @@ module.exports = function(passport, db) {
         );
     });
 
-
+    ///todo: Cannot request spots in your own car
+    ///todo: Cannot request multiple spots in a car
     ///REQUEST
-    router.post('request/new', isLoggedIn, function(req, res, next){
+    router.post('/request/new', isLoggedIn, function(req, res, next){
         dbClient.query(
-            "INSERT INTO REQUEST() FROM account where EMAIL=$1", [req.body.email],
+            "INSERT INTO REQUEST(ride_id, user_id, accepted, updated_on, created_on) VALUES($1, $2, 'FALSE', Now(), Now())", [req.body.ride_id, req.user.user_id],
             (err, dbRes) => {
                 if (dbRes) {
                     if (!err) {
-                        //res.rows.forEach((item) => console.log(item));
-                        //console.log("RESULT::::" + dbRes.rows[0]);
-                        //return res.send({data: dbRes.rows, requester:req.user.email});; //there should only be one match
                         console.log(dbRes);
                         res.sendStatus(200);
                     } else {
@@ -129,12 +127,43 @@ module.exports = function(passport, db) {
         );
     });
 
-    router.post('request/accept', isLoggedIn, function(req, res, next){
-
+    ///TODO: add logic to check capacity
+    router.post('/request/accept', isLoggedIn, function(req, res, next){
+        dbClient.query(
+            "UPDATE request SET accepted = 'TRUE', updated_on = Now() WHERE request_id = $1", [req.body.request_id],
+            (err, dbRes) => {
+                if (dbRes) {
+                    if (!err) {
+                        console.log(dbRes);
+                        res.sendStatus(200);
+                    } else {
+                        console.log(err.stack);
+                        res.sendStatus(500);
+                    }
+                } else {
+                    res.sendStatus(500);
+                }
+            }
+        );
     });
 
-    router.post('request/decline', isLoggedIn, function(req, res, next){
-
+    router.post('/request/decline', isLoggedIn, function(req, res, next){
+        dbClient.query(
+            "UPDATE request SET accepted = 'FALSE', updated_on = Now() WHERE request_id = $1", [req.body.request_id],
+            (err, dbRes) => {
+                if (dbRes) {
+                    if (!err) {
+                        console.log(dbRes);
+                        res.sendStatus(200);
+                    } else {
+                        console.log(err.stack);
+                        res.sendStatus(500);
+                    }
+                } else {
+                    res.sendStatus(500);
+                }
+            }
+        );
     });
 
     return router;
