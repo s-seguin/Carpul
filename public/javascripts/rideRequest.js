@@ -32,7 +32,6 @@ function acceptRequest(request_id){
                 socket.emit('getMyRidesFromServer');
                 socket.emit('getMyPassengerRidesFromServer');
                 socket.emit('requestAccepted', request_id);
-                alert('You accepted request no ' + request_id);
             } else  if (returnedData  === 'Ride full') {
                 alert('Sorry that ride is already full');
             }
@@ -49,7 +48,6 @@ function declineRequest(request_id){
                 socket.emit('getMyRidesFromServer');
                 socket.emit('getMyPassengerRidesFromServer');
                 socket.emit('requestDeclined', request_id);
-                alert('You declined request no ' + request_id);
             }
             else
                 alert('Sorry we could not submit you request');
