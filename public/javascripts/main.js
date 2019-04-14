@@ -100,11 +100,11 @@ $(function()  {
                     dupID.push(maps[index].ride_id);
                     //console.log(JSON.stringify(requests));
                     let passengerTable =
-                        "<table>" +
+                        "<table class='table table-bordered'>" +
                         "<thead>" +
                         "<tr>" +
-                        "<th>email</th>" +
-                        "<th>status</th>" +
+                        "<th>Email</th>" +
+                        "<th>Status</th>" +
                         "</tr>" +
                         "</thead>" +
                         "<tbody>";
@@ -115,23 +115,24 @@ $(function()  {
                             passengerTable += "<tr>";
                             passengerTable += "<td>" + requests[r].email+ "</td>";
                             if (requests[r].accepted == null) {
-                                passengerTable += "<td><div class='btn-group text-nowrap'><button onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
-                                passengerTable += "<button onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
+                                passengerTable += "<td><div class='btn-group'><button class='btn btn-xs btn-success' onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
+                                passengerTable += "<button class='btn btn-xs btn-warning' onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
                             } else {
                                 if (requests[r].accepted == true)
-                                    passengerTable += "<td>accepted</td>";
+                                    passengerTable += "<td>Accepted</td>";
                                 else
-                                    passengerTable += "<td>declined</td>";
+                                    passengerTable += "<td>Declined</td>";
 
                             }
                         } else {
                             noPassenger = true;
                         }
                     }
-                    if (noPassenger)
-                        passengerTable = "No requests";
-                    else
+                     if (!noPassenger)
                         passengerTable += "</tbody></table>";
+                    else
+                        passengerTable = "No Requests";
+
 
                     var ridesTable = document.getElementById("myRidesTable");
                     var newRow = ridesTable.insertRow(1);

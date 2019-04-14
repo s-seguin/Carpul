@@ -14,6 +14,7 @@ function renderMyRides(){
     $('a').removeClass('active');
     $('#myRidesNav').addClass('active');
     $('#mainViewer').html(myRides);
+    $('#passengerRideTable').hide();
     socket.emit('getMyRidesFromServer');
     socket.emit('getMyPassengerRidesFromServer');
 }
@@ -51,10 +52,11 @@ let myAccount =
     '    </div>\n' +
     '</div>';
 
-let myRides = '<div><h3>My Rides: </h3>' +
-                // '<ul id=myRidesList></ul>' +
-              '</div>'+
-              '<table class="table" id="myRidesTable">'+
+let myRides = '<div class="myRidesController"><ul class="nav nav-tabs">\n' +
+                '  <li id="driverToggle" class="active"><a onclick="showMyRidesTable()">I\'m the driver</a></li>\n' +
+                '  <li id="passengerToggle"><a onclick="showMyPassengerTable()">I\'m the passenger</a></li>\n' +
+            '</ul>' +
+              '<table class="table table-responsive table-dark" id="myRidesTable">'+
               '<thead>'+
               '<tr>'+
                 '<th scope="col">Ride Time</th>'+
@@ -65,9 +67,7 @@ let myRides = '<div><h3>My Rides: </h3>' +
                 '<th scope="col">Delete Ride</th>'+
               '</tr>'+
             '</thead> </table>' +
-            '<div><h3>Passenger Rides: </h3>' +
-            '</div>'+
-            '<table class="table" id="passengerRideTable">'+
+            '<table class="table table-responsive table-striped" id="passengerRideTable">'+
             '<thead>'+
             '<tr>'+
               '<th scope="col">Ride Time</th>'+
@@ -76,7 +76,7 @@ let myRides = '<div><h3>My Rides: </h3>' +
               '<th scope="col">Cost</th>'+
               '<th scope="col">Status</th>'+
             '</tr>'+
-          '</thead> </table>'
+          '</thead> </table></div>'
 
 let mainPage =
     '<h1>Available Rides:</h1>' +
@@ -85,3 +85,17 @@ let mainPage =
 let searchPage =
     '<h1 id="searchResultName">Destination: </h1>' +
     '<div class="row" id="exploreRow"> </div>';
+
+function showMyRidesTable() {
+    $('li').removeClass('active');
+    $('#driverToggle').addClass('active');
+    $('#passengerRideTable').hide();
+    $('#myRidesTable').show();
+}
+
+function showMyPassengerTable() {
+    $('li').removeClass('active');
+    $('#passengerToggle').addClass('active');
+    $('#myRidesTable').hide();
+    $('#passengerRideTable').show();
+}
