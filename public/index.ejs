@@ -19,6 +19,8 @@
     <!-- Latest compiled JavaScript -->
     <script type="text/javascript" src="javascripts/main.js"></script>
     <script type="text/javascript" src="javascripts/pageController.js"></script>
+    <script type="text/javascript" src="javascripts/rideRequest.js"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -36,14 +38,15 @@
                 <img src="images/logout.png">
             </a>
             <a id="notifications">
-                <img src="images/bell.png">
+                <img src="images/bell.png"/>
+                <img src="images/notification.png" style="display: none;"/>
             </a>
 
             <a id="myAccountNav" onclick="renderMyAccount()">
                 <img src="images/user.png">
             </a>
 
-            <input type="text" placeholder="Search for a different ride.." id="searchBar">
+            <input type="text" placeholder="Search for a destination.." id="searchBar">
         </nav>
         <div class="container-fluid" id="mainViewer">
         </div>
@@ -62,7 +65,7 @@
             <div class="modal-body container-fluid" id="post-ride-body">
                 <div class="row">
                     <div class="col-sm-4" id="ride-details">
-                        <h2 id="details-header">Ride Details</h2>
+                        <h2 id="details-header">Ride Form</h2>
                         <input class="controls" id="origin-input" placeholder="Enter an origin location"
                                type="text">
 
@@ -97,9 +100,50 @@
             <!--<iframe allowfullscreen frameborder="0" height="450" id='embeddedMap' src="" style="border:0" width="600"></iframe>-->
         </div>
     </div>
+  </div>
 
-</div>
+  <!-- Modal -->
+  <div id="rideDetailModal" class="modal fade" role="dialog">
+      <div class="modal-dialog" id="post-ride-modal">
+          <!-- Modal content-->
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h2 class="modal-title">Ride Details</h2>
+              </div>
+              <div class="modal-body container-fluid" id="ride-detail-body">
+                  <div class="row">
+                      <div class="col-sm-4">
+                        <label class="rdmHeader">Origin:</label>
+                        <p id="rdm-origin" class="rdmText">undefined</p>
 
+                        <label class="rdmHeader">Destination:</label>
+                        <p id="rdm-destination" class="rdmText">undefined</p>
+
+                        <label class="rdmHeader">Ride Date:</label>
+                        <p id="rdm-date" class="rdmText">undefined</p>
+
+                        <label class="rdmHeader">Seats available:</label>
+                        <p id="rdm-available" class="rdmText">undefined</p>
+
+                        <label class="rdmHeader">Seat price:</label>
+                        <p id="rdm-price" class="rdmText">undefined</p>
+                      </div>
+                      <iframe class="col-sm-8" id="detailMap" frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
+                      <!-- iframe here potentially to load embeddedMap into -->
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" onclick="requestRide()">Request Seat</button>
+                  </div>
+              </div>
+              <script async
+                      defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"></script>
+              <!-- Test Portion for Embedded Map -->
+              <!--<iframe allowfullscreen frameborder="0" height="450" id='embeddedMap' src="" style="border:0" width="600"></iframe>-->
+          </div>
+      </div>
+    </div>
 <!-- Modal -->
 <div id="logoutModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -117,6 +161,25 @@
                 <button type="button" class="btn btn-default">
                     <a href="/logout">Yes</a>
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal-->
+<div id="Delete_RideModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Ride</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you wish to delete this ride posting?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="Delete_Ride_No" type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button id="Delete_Ride_Yes" type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
             </div>
         </div>
     </div>

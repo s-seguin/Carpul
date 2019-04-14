@@ -1,25 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-//db stuff
-var dbConn = require('../config/database');
-var pg = require('pg');
 var dbClient;
 
-if (dbConn.ssl == "true") {
-  console.log("[DB]  connecting to heroku db");
-  dbClient = new pg.Client(
-      {
-        connectionString: dbConn.herokuConn,
-        ssl: dbConn.ssl
-      }
-  );
-} else {
-  console.log("[DB]  connecting to local db");
-  dbClient = new pg.Client(dbConn.localConn);
-}
-
-dbClient.connect();
 
 /***
  * Insert a new ride into the Ride table
@@ -29,7 +12,7 @@ function insertIntoDB(rideObj) {
   //TODO: Remove hard coded values and use real value from users
   console.log("Insert into DB");
   dbClient.query(
-      `INSERT INTO ride(user_id, start_location, end_location, capacity, available, embedded_map, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}',${rideObj.capacity},${rideObj.available},'${rideObj.embeddedMapString}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
+      `INSERT INTO ride(user_id, start_location, end_location, capacity, available, embedded_map, ride_date, created_on, price_per_seat) VALUES ('${rideObj.user_id}', '${rideObj.start_location}','${rideObj.end_location}',${rideObj.capacity},${rideObj.available},'${rideObj.embedded_map}', (TIMESTAMP '${rideObj.ride_date}'), Now(), ${rideObj.price_per_seat});`,
       (err, res) => {
         if (res) {
           console.log(res);
@@ -39,6 +22,27 @@ function insertIntoDB(rideObj) {
       }
   );
   //dbClient.close();
+}
+function sendMyRidesToClient(socket){
+  let mapObjs = null;
+  dbClient.query(
+    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
+    (err, res) => {
+      if (res) {
+        console.log("num rows from getMyRides query " + res.rows.length);
+        mapObjs = [];
+        res.rows.forEach((item) => {
+          mapObjs.push(item);
+        });
+        console.log("Sending " + mapObjs.length + " maps");
+        socket.emit('sendMyRidesToClient', mapObjs);
+      } else {
+        console.log("there was an error: " + err);
+        console.log(mapObjs);
+        socket.emit('sendMapsToClient', mapObjs);
+      }
+    }
+  );
 }
 
 ///TESTING to make sure the thing inserted
@@ -55,7 +59,7 @@ function selectAllFromRide() {
   );
 }
 
-// route middleware to make sure a user is logged in
+  // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
   // if user is authenticated in the session, carry on
@@ -66,7 +70,8 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
-module.exports = function(passport, server) {
+module.exports = function(passport, server, db) {
+  dbClient = db;
   var savedUsername = null;
 
   router.get('/main', isLoggedIn, function(req, res, next) {
@@ -88,32 +93,6 @@ module.exports = function(passport, server) {
    // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
-  ///We could likely delete this embeddedMapFunction function
-  function embeddedMapFunction(item, index){
-    //Don't process line if empty or fucked
-    if (item.length > 2) {
-
-      console.log("Print element at "+index+": " + item);
-      //Turn line into object
-      var obj = JSON.parse(item);
-      console.log("JSON: " + JSON.stringify(obj));
-
-      //I think this should work because the place_id are a fixed length
-      //This basically works except for the first case. For some reason it is slightly longer than the other stringS??
-      var origin = obj.origin.placeId;
-      var destination = obj.destination.placeId;
-      console.log("origin: " + origin);
-      var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
-
-      var fs = require('fs');
-      fs.appendFile("routes\\embeddedMaps.txt", embeddedMapString+"\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-  }
-
   var io = require('socket.io')(server);
 
   io.on('connection', function(socket){
@@ -121,27 +100,44 @@ module.exports = function(passport, server) {
     var readline = require('readline');
     var fs = require('fs');
 
+    socket.on('newRideRequest', (x) => {
+      console.log("New ride request");
+    });
+
     socket.on('sendNewMapToServer', function(rideFormData){
       //TODO: get user id from session and store in rideObj
 
       let rideObj = rideFormData;
-      rideObj.embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+rideFormData.originPlaceId+"&destination=place_id:"+rideFormData.destinationPlaceId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
+      rideObj.embedded_map = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+rideFormData.originPlaceId+"&destination=place_id:"+rideFormData.destinationPlaceId+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M"
 
       //Send this map right back to the client
       insertIntoDB(rideObj);
 
-      console.log("sending: " + JSON.stringify(rideObj) );
-      socket.emit('sendEmbeddedMap', rideObj);
+      dbClient.query(
+          'SELECT r.ride_id FROM ride r INNER JOIN (' +
+              'SELECT MAX(created_on) created_on FROM ride' +
+          ') c ON r.created_on=c.created_on ' +
+          'WHERE r.embedded_map=$1', [rideObj.embedded_map],
+          (err, res) => {
+            if (res) {
+              res.rows.forEach((item) => {
+                rideObj.ride_id = item.ride_id;
+                console.log("sending: " + JSON.stringify(rideObj));
+                socket.emit('sendEmbeddedMap', rideObj);
+              });
+            } else {
+              console.log("There was an error grabbing ride_id for latest post: " + err);
+            }
+          }
+      );
     });
+
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
       let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
       console.log("Querying the database and make a list of non expired Maps");
-      console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
-      let testTime = "2019-04-11T19:15:44";
-      console.log(testTime + "---" + timeOfQuery);
       dbClient.query(
-        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
         (err, res) => {
           if (res) {
             console.log("num rows from query " + res.rows.length);
@@ -162,16 +158,29 @@ module.exports = function(passport, server) {
       console.log("Waiting for DB response");
     });
 
+    //populate detail card for ride
+    socket.on('getInfoForCard', function(rideId) {
+      console.log(rideId);
+      dbClient.query(
+        "SELECT r.* FROM ride r WHERE r.ride_id=$1", [rideId],
+        (err, res) => {
+          if (res) {
+            socket.emit('fillDetailCardInfo', res.rows[0]);
+
+          } else {
+            console.log("there was an error: " + err);
+          }
+        }
+      );
+    })
+
     // search function
       socket.on('getMapsFromServerSearch', function(searchValue){
         let mapObjs = null;
         let timeOfQuery = new Date();
         console.log("Querying the database and make a list of non expired Maps");
-        console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
-        let testTime = "2019-04-11T19:15:44";
-        console.log(testTime + "---" + timeOfQuery);
         dbClient.query(
-          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
           (err, res) => {
             if (res) {
               console.log("num rows from query " + res.rows.length);
@@ -199,22 +208,19 @@ module.exports = function(passport, server) {
       console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
     });
     socket.on('getMyRidesFromServer', function(){
-      let mapObjs = null;
+      sendMyRidesToClient(socket);
+    });
+    socket.on("deleteRide", function(data){
+      console.log("request to delete ride " + data);
+      let rideToDelete = data;
       dbClient.query(
-        "SELECT * FROM ride WHERE user_id=$1",[socket.user_id],
+        "DELETE FROM ride WHERE ride_id=$1",[rideToDelete],
         (err, res) => {
           if (res) {
-            console.log("num rows from getMyRides query " + res.rows.length);
-            mapObjs = [];
-            res.rows.forEach((item) => {
-              mapObjs.push(item);
-            });
-            console.log("Sending " + mapObjs.length + " maps");
-            socket.emit('sendMyRidesToClient', mapObjs);
+            console.log("Deleted: \n" + JSON.stringify(res));
+            sendMyRidesToClient(socket);
           } else {
             console.log("there was an error: " + err);
-            console.log(mapObjs);
-            socket.emit('sendMapsToClient', mapObjs);
           }
         }
       );
