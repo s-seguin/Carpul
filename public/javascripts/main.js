@@ -297,7 +297,7 @@ function searchRender(searchValue){
       $('#exploreRow').html("");
       for (let index in maps) {
         console.log(maps[index].end_location +" ---- "+searchValue);
-        if(maps[index].end_location.includes(searchValue)){
+        if(maps[index].end_location.toLowerCase().includes(searchValue.toLowerCase())){
           searchMaps.push(maps[index]);
           var column =
             '<div class="col-sm-4">' +
