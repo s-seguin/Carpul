@@ -345,16 +345,20 @@ function searchRender(searchValue){
         }
       }
       console.log("received " + searchMaps.length + " maps");
-      console.log(searchMaps);
-      $('iframe').each(function(){
-        console.log($(this).attr('src'));
-        if (i < searchMaps.length && $(this).attr('src') != "about:blank") { //idk wherer the hell about:blank is coming from but it's an unseeable iframe that needs to be ignored when populating
-          console.log(searchMaps[i].embedded_map);
-          $(this).attr('src', searchMaps[i].embedded_map);
-          console.log("Im drawing a map");
-          i++;
-        }
-      })
+      if (searchMaps.length == 0) {
+        $('#exploreRow').append('<h4 style="padding-left:15px">No Rides found for this destination</h4>');
+      }else {
+        console.log(searchMaps);
+        $('iframe').each(function(){
+          console.log($(this).attr('src'));
+          if (i < searchMaps.length && $(this).attr('src') != "about:blank") { //idk wherer the hell about:blank is coming from but it's an unseeable iframe that needs to be ignored when populating
+            console.log(searchMaps[i].embedded_map);
+            $(this).attr('src', searchMaps[i].embedded_map);
+            console.log("Im drawing a map");
+            i++;
+          }
+        })
+      } //End else
     } catch (e) {
       console.log(e);
     } finally {
