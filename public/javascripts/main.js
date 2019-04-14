@@ -237,7 +237,7 @@ socket.on('sendMyPassengerRidesToClient', function(passengerFile){
 
   $(document).on("click", ".ride-body", function() {
     $('#rideDetailModal').data("ride_id", $(this).data("ride_id"));
-
+    $('#rdmClose').focus();
     socket.emit('getInfoForCard', $(this).data("ride_id"));
   });
 });

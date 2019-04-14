@@ -177,6 +177,9 @@ img.ride-selector {
   width: 100%;
   position: absolute;
   text-align: center;
+  font-size: 14pt;
+  font-weight: 400;
+  color: mintcream;
   left: 0;
   bottom: 0;
   background-color: lightskyblue;
@@ -224,20 +227,45 @@ display: inline-block;
 
 .rdmText {
   font-family: Roboto, sans-serif;
-  font-weight: 300;
+  font-weight: 350;
   font-style: italic;
   font-size: 14 pt;
   padding: 0 11px 0 13px;
 }
 
 .rdmHeader {
+  font-family: Roboto, sans-serif;
   font-size: 15pt;
   font-weight: 400;
   font-style: normal;
+  color: cornflowerblue;
 }
 
 .controls:focus {
   border-color: #4d90fe;
+}
+
+.row {
+  max-height: 450px;
+  margin-bottom: 15px;
+
+}
+
+.modal-title, #details-header {
+  color: cornflowerblue;
+}
+
+#rdmBody {
+  margin: 0 0 15px 0;
+}
+
+#rdmDetails, #detailMap {
+  height: -webkit-fill-available;
+}
+
+#rdmDetails {
+  padding-top: 20px;
+  border-radius: 15px;
 }
 
 #mode-selector {

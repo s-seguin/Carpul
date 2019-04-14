@@ -46,7 +46,7 @@
                 <img src="images/user.png">
             </a>
 
-            <input type="text" placeholder="Search for a destination.." id="searchBar">
+            <input type="text" placeholder="Search a destination.." id="searchBar">
         </nav>
         <div class="container-fluid" id="mainViewer">
         </div>
@@ -112,8 +112,8 @@
                   <h2 class="modal-title">Ride Details</h2>
               </div>
               <div class="modal-body container-fluid" id="ride-detail-body">
-                  <div class="row">
-                      <div class="col-sm-4">
+                  <div id="rdmBody" class="row">
+                      <div id="rdmDetails" class="col-sm-4" style="background: #ececec">
                         <label class="rdmHeader">Origin:</label>
                         <p id="rdm-origin" class="rdmText">undefined</p>
 
@@ -133,8 +133,8 @@
                       <!-- iframe here potentially to load embeddedMap into -->
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-default" data-dismiss="modal" onclick="requestRide()">Request Seat</button>
+                      <button id="rdmClose" type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="requestRide()">Request Seat</button>
                   </div>
               </div>
               <script async
