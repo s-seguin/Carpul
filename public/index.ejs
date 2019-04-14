@@ -63,7 +63,7 @@
             <div class="modal-body container-fluid" id="post-ride-body">
                 <div class="row">
                     <div class="col-sm-4" id="ride-details">
-                        <h2 id="details-header">Ride Details</h2>
+                        <h2 id="details-header">Ride Form</h2>
                         <input class="controls" id="origin-input" placeholder="Enter an origin location"
                                type="text">
 
@@ -107,39 +107,32 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Post A New Ride</h4>
+                  <h2 class="modal-title">Ride Details</h2>
               </div>
               <div class="modal-body container-fluid" id="ride-detail-body">
                   <div class="row">
                       <div class="col-sm-4" id="ride-details">
-                          <p id="ride-detail-id" value="test">test1<p>
-                          <h2 id="details-header">Ride Details</h2>
-                          <input class="controls" id="origin-input" placeholder="Enter an origin location"
-                                 type="text">
+                        <label>Origin:</label>
+                        <p id="rdm-origin">undefined</p>
 
-                          <input class="controls" id="destination-input" placeholder="Enter a destination location"
-                                 type="text">
-                          <div class="selector-images" >
-                              <img alt="Driver" class="ride-selector" id="imgDriver" src="images/car.png">
-                          </div>
+                        <label>Destination:</label>
+                        <p id="rdm-destination">undefined</p>
 
-                          <div id="driver-form-elements">
-                              <span class="detail-span" id="departureDate"> Ride date: <input id="dateInput" class="rideDetailsInput" type="date"></span>
-                              <span class="detail-span" id="departureTime"> Departure: <input id="timeInput" class="rideDetailsInput" type="time"></span>
-                              <span class="detail-span" id="capacity"> Capacity: <input id="capInput" class="rideDetailsInput" placeholder="# of open seats" maxlength="1" pattern="\d*"
-                                                                                        size="1" type="text"></span>
-                              <span class="detail-span" id="price"> Price: $ <input id="priceInput" class="rideDetailsInput" placeholder="$$$/seat" maxlength="6" pattern="\d*"
-                                                                                    size="6" type="text"></span>
-                          </div>
-                          <button class="ride-detail-element" id="btnPostRide" onclick="postRide()">Post Ride</button>
+                        <label>Ride Date:</label>
+                        <p id="rdm-date">undefined</p>
+
+                        <label>Seats available:</label>
+                        <p id="rdm-available">undefined</p>
+
+                        <label>Seat price:</label>
+                        <p id="rdm-price">undefined</p>
                       </div>
-                      <div class="col-sm-8" id="map"></div>
+                      <iframe class="col-sm-8" id="detailMap" frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
+                      <!-- iframe here potentially to load embeddedMap into -->
                   </div>
-                  <div style="display: none">
-                      <div class="controls" id="mode-selector">
-                          <input checked="checked" id="changemode-driving" name="type" type="radio">
-                          <label for="changemode-driving">Driving</label>
-                      </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Request Seat</button>
                   </div>
               </div>
               <script async

@@ -169,6 +169,7 @@ module.exports = function(passport, server) {
           }
       );
     });
+
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
       let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
@@ -197,6 +198,22 @@ module.exports = function(passport, server) {
       //Turns each link into an element of an array
       console.log("Waiting for DB response");
     });
+
+    //populate detail card for ride
+    socket.on('getInfoForCard', function(rideId) {
+      console.log(rideId);
+      dbClient.query(
+        "SELECT r.* FROM ride r WHERE r.ride_id=$1", [rideId],
+        (err, res) => {
+          if (res) {
+            socket.emit('fillDetailCardInfo', res.rows[0]);
+
+          } else {
+            console.log("there was an error: " + err);
+          }
+        }
+      );
+    })
 
     // search function
       socket.on('getMapsFromServerSearch', function(searchValue){

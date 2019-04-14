@@ -15,7 +15,7 @@ $(function()  {
           '<div class="col-sm-4">' +
             '<div class="col-sm-12 well">' +
               '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
-              '<div class="ride-body" type="button" data-id="' + maps[index].ride_id +
+              '<div class="ride-body" type="button" data-ride_id="' + maps[index].ride_id +
               '" data-toggle="modal" data-target="#rideDetailModal">' +
                 '<h4>Driver: ' + maps[index].fname+ '</h4>' +
                 '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
@@ -41,6 +41,28 @@ $(function()  {
       console.log("Done drawing maps");
     }
   });
+
+  socket.on('fillDetailCardInfo', function(rideEntry) {
+    let start = document.getElementById('rdm-origin');
+    start.innerHTML = rideEntry.start_location;
+
+    let destination = document.getElementById('rdm-destination');
+    destination.innerHTML = rideEntry.end_location;
+
+    let date = document.getElementById('rdm-date');
+    date.innerHTML = rideEntry.ride_date;
+
+    let available = document.getElementById('rdm-available');
+    available.innerHTML = rideEntry.available;
+
+    let price = document.getElementById('rdm-price');
+    price.innerHTML = rideEntry.price_per_seat;
+
+    let map = document.getElementById('detailMap');
+    $(map).attr('src', rideEntry.embedded_map);
+
+  });
+
   socket.on('sendMyRidesToClient', function(maps){
     $('#myRidesList').html("");
     i=0;
@@ -97,10 +119,7 @@ $(function()  {
   });
 
   $(document).on("click", ".ride-body", function() {
-    var rideId = $(this).data('id');
-    console.log($('#ride-detail-id').val());
-    console.log('HEREEEEEE:::::' + JSON.stringify(document.getElementById('ride-detail-id')));
-    $('#ride-detail-id').val(rideId);
+    socket.emit('getInfoForCard', $(this).data("ride_id"));
   });
 });
 

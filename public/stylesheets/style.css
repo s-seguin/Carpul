@@ -192,8 +192,7 @@ display: inline-block;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-#origin-input,
-#destination-input, .detail-span {
+.controls, .detail-span {
   background-color: #fff;
   font-family: Roboto, sans-serif;
   font-weight: 300;
@@ -220,8 +219,7 @@ display: inline-block;
   border-color: darkgray;
 }
 
-#origin-input:focus,
-#destination-input:focus {
+.controls:focus {
   border-color: #4d90fe;
 }
 
