@@ -13,6 +13,8 @@ $(function()  {
       console.log("One of your rides has received an update");
       $("#NotificationOn").css("display", "");
       $("#NotificationOff").css("display", "none");
+      socket.emit('getMyRidesFromServer');
+      socket.emit('getMyPassengerRidesFromServer');
     }
   });
 
@@ -280,6 +282,7 @@ function postRide() {
   }
   //Here we want to send this object back to server in order for the server to save this route for later
   socket.emit("sendNewMapToServer", returnValues.formData);
+  socket.emit('getMyRidesFromServer');
 }
 
 function notificationClicked(){
