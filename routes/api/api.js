@@ -130,6 +130,7 @@ module.exports = function(passport, db) {
                                         res.sendStatus(500);
                                     }
                                 } else {
+                                    console.log(err.stack);
                                     res.sendStatus(500);
                                 }
                             }

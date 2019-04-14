@@ -13,8 +13,11 @@ $(function()  {
       console.log("One of your rides has received an update");
       $("#NotificationOn").css("display", "");
       $("#NotificationOff").css("display", "none");
+      socket.emit('getMyRidesFromServer');
+      socket.emit('getMyPassengerRidesFromServer');
     }
   });
+
 
   socket.on('sendMapsToClient', function(maps){
     let i=0;
@@ -149,7 +152,6 @@ $(function()  {
               deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride_id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
 
           }
-
       }
     } catch (e){
       console.log(e);
@@ -157,6 +159,48 @@ $(function()  {
       console.log("Done getting my rides from server");
     }
   });
+
+socket.on('sendMyPassengerRidesToClient', function(passengerFile){
+  $('#passengerRideTable').html("");
+  $('#passengerRideTable').html('<thead>'+
+    '<tr>'+
+      '<th scope="col">Ride Time</th>'+
+      '<th scope="col">From</th>'+
+      '<th scope="col">To</th>'+
+      '<th scope="col">Cost</th>'+
+      '<th scope="col">Status</th>'+
+    '</tr>'+
+  '</thead>');
+  console.log("received " + passengerFile.length + " ride the user has been passenger of from server");
+  try{
+    for(index in passengerFile){
+      var passengerTable = document.getElementById("passengerRideTable");
+      var newRow = passengerTable.insertRow(1);
+      var dateCell = newRow.insertCell(0);
+      var startLocCell = newRow.insertCell(1);
+      var endLocCell = newRow.insertCell(2);
+      var priceCell = newRow.insertCell(3);
+      var statusCell = newRow.insertCell(4);
+
+      dateCell.innerHTML = formatDate(passengerFile[index].ride_date);
+      startLocCell.innerHTML = passengerFile[index].start_location;
+      endLocCell.innerHTML = passengerFile[index].end_location;
+      priceCell.innerHTML = passengerFile[index].price_per_seat;
+      if(passengerFile[index].accepted === true){
+        statusCell.innerHTML = "Accepted";
+      } else if(passengerFile[index].accepted === false){
+        statusCell.innerHTML = "Rejected";
+      } else{
+        statusCell.innerHTML = "Pending";
+      }
+    }
+
+  }catch (e){
+    console.log(e);
+  } finally {
+    console.log("Done getting my passenger rides from server");
+  }
+});
   $(document).on("click", ".Delete_Ride", function(){
     let upForDeletion = $(this).data("ride_id");
     console.log('Delete ride? ' + $(this).data("ride_id"));
@@ -239,6 +283,7 @@ function postRide() {
   }
   //Here we want to send this object back to server in order for the server to save this route for later
   socket.emit("sendNewMapToServer", returnValues.formData);
+  socket.emit('getMyRidesFromServer');
 }
 
 function notificationClicked(){
