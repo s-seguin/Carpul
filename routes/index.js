@@ -109,32 +109,6 @@ module.exports = function(passport, server) {
    // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
-  ///We could likely delete this embeddedMapFunction function
-  function embeddedMapFunction(item, index){
-    //Don't process line if empty or fucked
-    if (item.length > 2) {
-
-      console.log("Print element at "+index+": " + item);
-      //Turn line into object
-      var obj = JSON.parse(item);
-      console.log("JSON: " + JSON.stringify(obj));
-
-      //I think this should work because the place_id are a fixed length
-      //This basically works except for the first case. For some reason it is slightly longer than the other stringS??
-      var origin = obj.origin.placeId;
-      var destination = obj.destination.placeId;
-      console.log("origin: " + origin);
-      var embeddedMapString = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
-
-      var fs = require('fs');
-      fs.appendFile("routes\\embeddedMaps.txt", embeddedMapString+"\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-  }
-
   var io = require('socket.io')(server);
 
   io.on('connection', function(socket){
@@ -158,11 +132,8 @@ module.exports = function(passport, server) {
       let mapObjs = null;
       let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
       console.log("Querying the database and make a list of non expired Maps");
-      console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
-      let testTime = "2019-04-11T19:15:44";
-      console.log(testTime + "---" + timeOfQuery);
       dbClient.query(
-        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
         (err, res) => {
           if (res) {
             console.log("num rows from query " + res.rows.length);
@@ -188,11 +159,8 @@ module.exports = function(passport, server) {
         let mapObjs = null;
         let timeOfQuery = new Date();
         console.log("Querying the database and make a list of non expired Maps");
-        console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
-        let testTime = "2019-04-11T19:15:44";
-        console.log(testTime + "---" + timeOfQuery);
         dbClient.query(
-          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
           (err, res) => {
             if (res) {
               console.log("num rows from query " + res.rows.length);

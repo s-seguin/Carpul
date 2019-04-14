@@ -310,7 +310,7 @@ function searchRender(searchValue){
                 '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
                 '<div class="ride-body">' +
                   '<h4>Driver: ' + maps[index].fname+ '</h4>' +
-                  '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
+                  '<h5>Departure: ' + formatDate(maps[index].ride_date) + '</h5>' +
                 '</div>' +
               '</div>' +
             '</div>'
