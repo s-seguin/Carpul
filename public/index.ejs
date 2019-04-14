@@ -63,7 +63,7 @@
             <div class="modal-body container-fluid" id="post-ride-body">
                 <div class="row">
                     <div class="col-sm-4" id="ride-details">
-                        <h2 id="details-header">Ride Details</h2>
+                        <h2 id="details-header">Ride Form</h2>
                         <input class="controls" id="origin-input" placeholder="Enter an origin location"
                                type="text">
 
@@ -98,9 +98,50 @@
             <!--<iframe allowfullscreen frameborder="0" height="450" id='embeddedMap' src="" style="border:0" width="600"></iframe>-->
         </div>
     </div>
+  </div>
 
-</div>
+  <!-- Modal -->
+  <div id="rideDetailModal" class="modal fade" role="dialog">
+      <div class="modal-dialog" id="post-ride-modal">
+          <!-- Modal content-->
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h2 class="modal-title">Ride Details</h2>
+              </div>
+              <div class="modal-body container-fluid" id="ride-detail-body">
+                  <div class="row">
+                      <div class="col-sm-4" id="ride-details">
+                        <label>Origin:</label>
+                        <p id="rdm-origin">undefined</p>
 
+                        <label>Destination:</label>
+                        <p id="rdm-destination">undefined</p>
+
+                        <label>Ride Date:</label>
+                        <p id="rdm-date">undefined</p>
+
+                        <label>Seats available:</label>
+                        <p id="rdm-available">undefined</p>
+
+                        <label>Seat price:</label>
+                        <p id="rdm-price">undefined</p>
+                      </div>
+                      <iframe class="col-sm-8" id="detailMap" frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>
+                      <!-- iframe here potentially to load embeddedMap into -->
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Request Seat</button>
+                  </div>
+              </div>
+              <script async
+                      defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M&libraries=places&callback=initMap"></script>
+              <!-- Test Portion for Embedded Map -->
+              <!--<iframe allowfullscreen frameborder="0" height="450" id='embeddedMap' src="" style="border:0" width="600"></iframe>-->
+          </div>
+      </div>
+    </div>
 <!-- Modal -->
 <div id="logoutModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
