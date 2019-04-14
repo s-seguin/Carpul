@@ -135,7 +135,7 @@ $(function()  {
               endLocCell.innerHTML = maps[index].end_location;
               priceCell.innerHTML = maps[index].price_per_seat;
               passengerCell.innerHTML = passengerTable;
-              deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
+              deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride_id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
 
           }
 
