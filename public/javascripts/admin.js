@@ -35,7 +35,11 @@ function deleteUser(email) {
     if (confirm("Are you sure you want to delete user: " + email + "?")){
         $.post('/api/user/delete', { email: email},
             function(returnedData){
-                console.log(returnedData);
+                $.ajax({
+                    url:'/api/users',
+                    success: (res) => {$('#userTableBody').html(''); buildTable(res);},
+                    error: (res) => console.log(res)
+                });
         });
     }
 }

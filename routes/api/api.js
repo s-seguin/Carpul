@@ -68,7 +68,28 @@ module.exports = function(passport, db) {
 
     router.post('/user/delete', isAdmin, function(req, res, next) {
         console.log(req.body.email);
-        res.send("Deleting " + req.body.email);
+
+        dbClient.query(
+            "DELETE FROM account where EMAIL=$1", [req.body.email],
+            (err, dbRes) => {
+                if (dbRes) {
+                    if (!err) {
+                        //res.rows.forEach((item) => console.log(item));
+                        //console.log("RESULT::::" + dbRes.rows[0]);
+                        //return res.send({data: dbRes.rows, requester:req.user.email});; //there should only be one match
+                        console.log(dbRes);
+                        res.sendStatus(200);
+                    } else {
+                        console.log(err.stack);
+                        res.sendStatus(500);
+                    }
+                } else {
+                    res.sendStatus(500);
+                }
+            }
+        );
+
+        //res.send("Deleting " + req.body.email);
     });
 
 
