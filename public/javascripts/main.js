@@ -63,6 +63,8 @@ $(function()  {
 
   });
 
+  ///Todo: refresh table when ride is accepted or declined
+    //todo: fix bug with only rides with requests showing up
   socket.on('sendMyRidesToClient', function(maps){
     $('#myRidesTable').html("");
     $('#myRidesTable').html('<thead>'+
@@ -96,8 +98,17 @@ $(function()  {
               for (let r in requests) {
                   passengerTable += "<tr>";
                   passengerTable += "<td>" + requests[r].email+ "</td>";
-                  passengerTable += "<td><div class='btn-group text-nowrap'><button>accept</button>";
-                  passengerTable += "<button>decline</button></div></td>";
+                  if (requests[r].accepted == null) {
+                      passengerTable += "<td><div class='btn-group text-nowrap'><button onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
+                      passengerTable += "<button onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
+                  } else {
+                      if (requests[r].accepted == true)
+                        passengerTable += "<td>accepted</td>";
+                      else
+                          passengerTable += "<td>declined</td>";
+
+                  }
+
               }
               passengerTable += "</tbody></table>";
 

@@ -152,21 +152,54 @@ module.exports = function(passport, db) {
     ///TODO: add logic to check capacity
     router.post('/request/accept', isLoggedIn, function(req, res, next){
         dbClient.query(
-            "UPDATE request SET accepted = 'TRUE', updated_on = Now() WHERE request_id = $1", [req.body.request_id],
+            "select ride.ride_id, ride.capacity, ride.available from ride join request on(ride.ride_id=request.ride_id) where request.request_id=$1",
+            [req.body.request_id],
             (err, dbRes) => {
                 if (dbRes) {
                     if (!err) {
-                        console.log(dbRes);
-                        res.sendStatus(200);
+                        console.log(dbRes.rows[0]);
+                        //if there is still room in the car
+                        if (dbRes.rows[0].available > 0 ) {
+                            dbClient.query(
+                                "UPDATE request SET accepted = 'TRUE', updated_on = Now() WHERE request_id = $1", [req.body.request_id],
+                                (err, dbRes1) => {
+                                    if (dbRes1) {
+                                        if (!err) {
+                                            //console.log(dbRes);
+                                            //res.sendStatus(200);
+                                            dbClient.query(
+                                                "update ride set available = $1 where ride_id = $2",
+                                                [dbRes.rows[0].available - 1, dbRes.rows[0].ride_id],
+                                                (err, dbRes2) => {
+                                                    if (!err)
+                                                        res.sendStatus(200);
+                                                    else
+                                                        res.sendStatus(500);
+                                                }
+                                            );
+                                        } else {
+                                            console.log(err.stack);
+                                            res.sendStatus(500);
+                                        }
+                                    } else {
+                                        res.sendStatus(500);
+                                    }
+                                }
+                            );
+                        } else {
+                            res.send('Ride full');
+                        }
                     } else {
                         console.log(err.stack);
-                        res.sendStatus(500);
+                        // res.sendStatus(500);
                     }
                 } else {
-                    res.sendStatus(500);
+                    //res.sendStatus(500);
                 }
             }
         );
+
+
     });
 
     router.post('/request/decline', isLoggedIn, function(req, res, next){
@@ -175,7 +208,7 @@ module.exports = function(passport, db) {
             (err, dbRes) => {
                 if (dbRes) {
                     if (!err) {
-                        console.log(dbRes);
+                        //console.log(dbRes);
                         res.sendStatus(200);
                     } else {
                         console.log(err.stack);
