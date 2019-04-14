@@ -12,14 +12,16 @@ function buildTable(users) {
     let myEmail = users.requester;
     for (u in users.data) {
         console.log(users.data[u]);
+        let login = users.data[u].last_login;
+        let created= users.data[u].created_on;
         let tr =
             "<tr>" +
             "<td>" + users.data[u].email+ "</td>" +
             "<td>" + users.data[u].fname+ "</td>" +
             "<td>" + users.data[u].lname+ "</td>" +
             "<td>" + users.data[u].phone+ "</td>" +
-            "<td>" + users.data[u].last_login+ "</td>" +
-            "<td>" + users.data[u].created_on+ "</td>" +
+            "<td>" + login.slice(0,10) + " " + login.slice(11, 19)+ "</td>" +
+            "<td>" + created.slice(0,10) + " " + created.slice(11, 19)+ "</td>" +
             "<td>";
 
         if (myEmail !== users.data[u].email)

@@ -48,8 +48,20 @@ module.exports = function (passport, dbClient) {
                 );
 
                 var checkPasswordMatches = function(result) {
-                    if (result.password == password)
-                        return done(null, result);
+                    if (result.password == password){
+
+                        dbClient.query(
+                            "UPDATE account SET last_login= Now() where email=$1", [email],
+                            (err, res) => {
+                                if (err)
+                                    console.log("[Auth] there was an error updating account " + email);
+
+                                return done(null, result);
+
+                            }
+                        );
+
+                    }
                     else
                         return done(null, false, req.flash("login", "Incorrect Password"));
 
