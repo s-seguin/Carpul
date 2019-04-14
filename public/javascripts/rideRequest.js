@@ -4,11 +4,13 @@ function requestRide() {
     $.post('api/request/new', { ride_id: ride_id},
         function(returnedData){
             console.log(returnedData);
-            if (returnedData === 'OK')
+            if (returnedData === 'OK') {
+                socket.emit('newRideRequest');
                 alert('Your request was submitted');
+            }
             else
                 alert('Sorry we could not submit you request');
     });
 
-    socket.emit('newRideRequest');
+
 }
