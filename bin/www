@@ -51,6 +51,7 @@ var registerRouter = require('../routes/register');
 var logoutRouter = require('../routes/logout');
 var adminRouter = require('../routes/admin');
 var forbidRouter = require('../routes/forbid');
+var apiRouter = require('../routes/api/api');
 
 
 var passport = require('passport');
@@ -75,13 +76,13 @@ app.use(passport.session()); //Login sessions
 app.use(flash()); //For 'Flashing' messages back to client
 
 ///ROUTES
-app.use('/', indexRouter(passport, server));
-app.use('/users', usersRouter(passport));
+app.use('/', indexRouter(passport, server, dbClient));
 app.use('/login', loginRouter(passport));
 app.use('/register', registerRouter(passport));
 app.use('/logout', logoutRouter(passport));
 app.use('/admin', adminRouter(passport, dbClient));
 app.use('/forbid', forbidRouter(passport));
+app.use('/api', apiRouter(passport, dbClient));
 
 /**
  * Listen on provided port, on all network interfaces.

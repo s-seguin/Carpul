@@ -1,25 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-//db stuff
-var dbConn = require('../config/database');
-var pg = require('pg');
 var dbClient;
 
-if (dbConn.ssl == "true") {
-  console.log("[DB]  connecting to heroku db");
-  dbClient = new pg.Client(
-      {
-        connectionString: dbConn.herokuConn,
-        ssl: dbConn.ssl
-      }
-  );
-} else {
-  console.log("[DB]  connecting to local db");
-  dbClient = new pg.Client(dbConn.localConn);
-}
-
-dbClient.connect();
 
 /***
  * Insert a new ride into the Ride table
@@ -66,7 +49,8 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
-module.exports = function(passport, server) {
+module.exports = function(passport, server, db) {
+  dbClient = db;
   var savedUsername = null;
 
   router.get('/main', isLoggedIn, function(req, res, next) {

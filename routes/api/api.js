@@ -3,7 +3,6 @@ var router = express.Router();
 
 var dbClient;
 
-// route middleware to make sure a user is logged in
 function isAdmin(req, res, next) {
 
     // if user is authenticated in the session, carry on
@@ -21,11 +20,11 @@ function isAdmin(req, res, next) {
                     } else {
                         console.log('There was an error');
                         console.log(err.stack);
-                        res.redirect('/forbid');
+                        res.sendStatus(403);
                     }
                 } else {
                     console.log('Not admin');
-                    res.redirect('/forbid');
+                    res.sendStatus(403);
                 }
             }
         );
@@ -37,14 +36,41 @@ function isAdmin(req, res, next) {
 
 }
 
-module.exports = function (passport, db) {
+module.exports = function(passport, db) {
 
     dbClient = db;
 
 
-    router.get('/', isAdmin, function(req, res, next) {
-        res.render('../public/admin.ejs', {title: 'Admin'});
+    /* GET users listing. */
+    router.get('/users', isAdmin, function(req, res, next) {
+
+        dbClient.query(
+            "SELECT email, fname, lname, phone, last_login, created_on FROM account",
+            (err, dbRes) => {
+                if (dbRes && dbRes.rowCount > 0) {
+
+                    if (!err) {
+                        //res.rows.forEach((item) => console.log(item));
+                        //console.log("RESULT::::" + dbRes.rows[0]);
+                        return res.send({data: dbRes.rows, requester:req.user.email});; //there should only be one match
+                    } else {
+                        console.log(err.stack);
+                        res.sendStatus(500);
+                    }
+                } else {
+                    res.sendStatus(500);
+                }
+            }
+        );
+
+
     });
+
+    router.post('/user/delete', isAdmin, function(req, res, next) {
+        console.log(req.body.email);
+        res.send("Deleting " + req.body.email);
+    });
+
 
     return router;
 };

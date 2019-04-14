@@ -2,13 +2,43 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="javascripts/admin.js"></script>
 </head>
 <body>
+<nav class="topnav">
+    <a id="logoContainer">
+        <img id="logo" src="images/logo.png">
+    </a>
+    <a href="/">Home</a>
+    <a class="active">Admin Panel</a>
+</nav>
+
 <div class="container" id="admin">
     <div class="row">
-      <div class="col-sm-12l">Admin</div>
+        <h2>All Users</h2>
+        <p>As an admin you have the privilege to see and delete users.<p/>
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>Email</th>
+                  <th>First Name</th>
+                  <th>Last Name </th>
+                  <th>Phone</th>
+                  <th>Last Login</th>
+                  <th>Created On</th>
+                  <th>Delete</th>
+              </tr>
+
+          </thead>
+          <tbody id="userTableBody">
+
+          </tbody>
+
+      </table>
     </div>
 </div>
 </body>
