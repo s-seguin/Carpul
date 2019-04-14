@@ -236,6 +236,10 @@ display: inline-block;
   font-weight: 300;
 }
 
+#myRidesList{
+  list-style: none;
+}
+
 .pac-container {
   z-index: 10000 !important;
 }

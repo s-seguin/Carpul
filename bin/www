@@ -22,11 +22,36 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+//db stuff
+var dbConn = require('../config/database');
+var pg = require('pg');
+var dbClient;
+
+if (dbConn.ssl == "true") {
+  console.log("[DB]  connecting to heroku db");
+  dbClient = new pg.Client(
+      {
+        connectionString: dbConn.herokuConn,
+        ssl: dbConn.ssl
+      }
+  );
+} else {
+  console.log("[DB]  connecting to local db");
+  dbClient = new pg.Client(dbConn.localConn);
+}
+
+
+dbClient.connect();
+console.log('[DB]  connected');
+
 var indexRouter = require('../routes/index');
 var usersRouter = require('../routes/users');
 var loginRouter = require('../routes/login');
 var registerRouter = require('../routes/register');
 var logoutRouter = require('../routes/logout');
+var adminRouter = require('../routes/admin');
+var forbidRouter = require('../routes/forbid');
+var apiRouter = require('../routes/api/api');
 
 
 var passport = require('passport');
@@ -35,7 +60,7 @@ var flash = require('connect-flash');
 var session = require('express-session');
 
 // pgDbConn = require('./config/database.js');
-require('../config/passport')(passport);
+require('../config/passport')(passport, dbClient);
 
 //Passport config stuff
 app.use(session({
@@ -51,11 +76,13 @@ app.use(passport.session()); //Login sessions
 app.use(flash()); //For 'Flashing' messages back to client
 
 ///ROUTES
-app.use('/', indexRouter(passport, server));
-app.use('/users', usersRouter(passport));
+app.use('/', indexRouter(passport, server, dbClient));
 app.use('/login', loginRouter(passport));
 app.use('/register', registerRouter(passport));
 app.use('/logout', logoutRouter(passport));
+app.use('/admin', adminRouter(passport, dbClient));
+app.use('/forbid', forbidRouter(passport));
+app.use('/api', apiRouter(passport, dbClient));
 
 /**
  * Listen on provided port, on all network interfaces.

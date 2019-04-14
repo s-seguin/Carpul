@@ -50,12 +50,33 @@ let myAccount =
     '    </div>\n' +
     '</div>';
 
-let myRides = '<div>My Rides: ' +
-                '<ul id=myRidesList></ul>' +
-              '</div>';
+let myRides = '<div><h3>My Rides: </h3>' +
+                // '<ul id=myRidesList></ul>' +
+              '</div>'+
+              '<table class="table" id="myRidesTable">'+
+              '<thead>'+
+              '<tr>'+
+                '<th scope="col">Ride Time</th>'+
+                '<th scope="col">From</th>'+
+                '<th scope="col">To</th>'+
+                '<th scope="col">Cost</th>'+
+                '<th scope="col">Delete Ride</th>'+
+              '</tr>'+
+            '</thead> </table>' +
+            '<div><h3>Passenger Rides: </h3>' +
+            '</div>'+
+            '<table class="table" id="passengerRideTable">'+
+            '<thead>'+
+            '<tr>'+
+              '<th scope="col">Ride Time</th>'+
+              '<th scope="col">From</th>'+
+              '<th scope="col">To</th>'+
+              '<th scope="col">Cost</th>'+
+            '</tr>'+
+          '</thead> </table>'
 
 let mainPage =
-    '<h1>Destination: University of Calgary</h1>' +
+    '<h1>Available Rides:</h1>' +
     '<div class="row" id="exploreRow"> </div>';
 
 let searchPage =

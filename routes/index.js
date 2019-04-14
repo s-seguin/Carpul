@@ -1,25 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-//db stuff
-var dbConn = require('../config/database');
-var pg = require('pg');
 var dbClient;
 
-if (dbConn.ssl == "true") {
-  console.log("[DB]  connecting to heroku db");
-  dbClient = new pg.Client(
-      {
-        connectionString: dbConn.herokuConn,
-        ssl: dbConn.ssl
-      }
-  );
-} else {
-  console.log("[DB]  connecting to local db");
-  dbClient = new pg.Client(dbConn.localConn);
-}
-
-dbClient.connect();
 
 /***
  * Insert a new ride into the Ride table
@@ -87,7 +70,8 @@ function isLoggedIn(req, res, next) {
   res.redirect('/login');
 }
 
-module.exports = function(passport, server) {
+module.exports = function(passport, server, db) {
+  dbClient = db;
   var savedUsername = null;
 
   router.get('/main', isLoggedIn, function(req, res, next) {
@@ -108,32 +92,6 @@ module.exports = function(passport, server) {
     res.render('../public/index.ejs',  {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
    // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
-
-  ///We could likely delete this embeddedMapFunction function
-  function embeddedMapFunction(item, index){
-    //Don't process line if empty or fucked
-    if (item.length > 2) {
-
-      console.log("Print element at "+index+": " + item);
-      //Turn line into object
-      var obj = JSON.parse(item);
-      console.log("JSON: " + JSON.stringify(obj));
-
-      //I think this should work because the place_id are a fixed length
-      //This basically works except for the first case. For some reason it is slightly longer than the other stringS??
-      var origin = obj.origin.placeId;
-      var destination = obj.destination.placeId;
-      console.log("origin: " + origin);
-      var embedded_map = "https://www.google.com/maps/embed/v1/directions?origin=place_id:"+origin+"&destination=place_id:"+destination+"&key=AIzaSyCj9Fanni2mPxM4cp3y1DAL1FqOfhY3M0M";
-
-      var fs = require('fs');
-      fs.appendFile("routes\\embeddedMaps.txt", embedded_map+"\n", function(err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-  }
 
   var io = require('socket.io')(server);
 
@@ -174,11 +132,8 @@ module.exports = function(passport, server) {
       let mapObjs = null;
       let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
       console.log("Querying the database and make a list of non expired Maps");
-      console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
-      let testTime = "2019-04-11T19:15:44";
-      console.log(testTime + "---" + timeOfQuery);
       dbClient.query(
-        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
         (err, res) => {
           if (res) {
             console.log("num rows from query " + res.rows.length);
@@ -220,11 +175,8 @@ module.exports = function(passport, server) {
         let mapObjs = null;
         let timeOfQuery = new Date();
         console.log("Querying the database and make a list of non expired Maps");
-        console.log("timezone offset " + timeOfQuery.getTimezoneOffset());
-        let testTime = "2019-04-11T19:15:44";
-        console.log(testTime + "---" + timeOfQuery);
         dbClient.query(
-          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id",
+          "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
           (err, res) => {
             if (res) {
               console.log("num rows from query " + res.rows.length);
