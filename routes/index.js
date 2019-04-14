@@ -4,7 +4,7 @@ var router = express.Router();
 var dbClient;
 
 let notificationCenter = [];
-
+var io;
 /***
  * Insert a new ride into the Ride table
  * @param rideObj
@@ -22,7 +22,6 @@ function insertIntoDB(rideObj) {
         }
       }
   );
-  //dbClient.close();
 }
 function sendMyRidesToClient(socket){
   let mapObjs = null;
@@ -74,6 +73,7 @@ function isLoggedIn(req, res, next) {
 module.exports = function(passport, server, db) {
   dbClient = db;
   var savedUsername = null;
+  io = require('socket.io')(server);
 
   router.get('/main', isLoggedIn, function(req, res, next) {
     res.redirect('/');
@@ -94,7 +94,6 @@ module.exports = function(passport, server, db) {
    // res.render('../public/main.html', {name: savedUsername, email: req.user.email, lname: req.user.lname, phone: req.user.phone, user_id: req.user.user_id });
   });
 
-  var io = require('socket.io')(server);
 
   io.on('connection', function(socket){
     console.log("New Connection from " + socket.id);
@@ -153,10 +152,9 @@ module.exports = function(passport, server, db) {
 
     socket.on('getMapsFromServer', function(){
       let mapObjs = null;
-      let timeOfQuery = new Date();//.toISOString().slice(0, 19);//.replace('T', ' ');
       console.log("Querying the database and make a list of non expired Maps");
       dbClient.query(
-        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1",[timeOfQuery],
+        "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= Now() ORDER BY r.ride_date",
         (err, res) => {
           if (res) {
             console.log("num rows from query " + res.rows.length);

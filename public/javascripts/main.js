@@ -16,6 +16,7 @@ $(function()  {
     }
   });
 
+
   socket.on('sendMapsToClient', function(maps){
     let i=0;
     try {
