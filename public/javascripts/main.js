@@ -23,7 +23,7 @@ $(function()  {
         var column =
           '<div class="col-sm-4">' +
             '<div class="col-sm-12 well">' +
-              '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
+              '<iframe frameborder="0" style="border:0" src="/images/loading.gif" allowfullscreen></iframe>' +
               '<div class="ride-body" type="button" data-ride_id="' + maps[index].ride_id +
               '" data-toggle="modal" data-target="#rideDetailModal">' +
                 '<h4>Driver: ' + maps[index].fname+ '</h4>' +
@@ -422,7 +422,7 @@ function searchRender(searchValue){
           var column =
             '<div class="col-sm-4">' +
               '<div class="col-sm-12 well">' +
-                '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
+                '<iframe frameborder="0" style="border:0" src="/images/loading.gif" allowfullscreen></iframe>' +
                 '<div class="ride-body" type="button" data-ride_id="' + maps[index].ride_id +
                 '" data-toggle="modal" data-target="#rideDetailModal">' +
                   '<h4>Driver: ' + maps[index].fname+ '</h4>' +
