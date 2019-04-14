@@ -3,9 +3,9 @@ function requestRide() {
     let ride_id =  $('#rideDetailModal').data("ride_id");
     $.post('api/request/new', { ride_id: ride_id},
         function(returnedData){
-           // console.log(returnedData);
             if (returnedData === 'OK') {
-              console.log("requested " + ride_id);
+                socket.emit('getMyRidesFromServer');
+                console.log("requested " + ride_id);
                 socket.emit('newRideRequest', ride_id);
                 alert('Your request was submitted');
             }
@@ -29,6 +29,7 @@ function acceptRequest(request_id){
         function(returnedData){
             //console.log(returnedData);
             if (returnedData === 'OK') {
+                socket.emit('getMyRidesFromServer');
                 socket.emit('requestAccepted', request_id);
                 alert('You accepted request no ' + request_id);
             } else  if (returnedData  === 'Ride full') {
@@ -44,6 +45,7 @@ function declineRequest(request_id){
         function(returnedData){
            //console.log(returnedData);
             if (returnedData === 'OK') {
+                socket.emit('getMyRidesFromServer');
                 socket.emit('requestDeclined', request_id);
                 alert('You declined request no ' + request_id);
             }

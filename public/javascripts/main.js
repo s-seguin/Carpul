@@ -17,7 +17,7 @@ $(function()  {
   });
 
   socket.on('sendMapsToClient', function(maps){
-    i=0;
+    let i=0;
     try {
       for (let index in maps) {
         var column =
@@ -73,7 +73,6 @@ $(function()  {
   });
 
   ///Todo: refresh table when ride is accepted or declined
-    //todo: fix bug with only rides with requests showing up
   socket.on('sendMyRidesToClient', function(maps){
     $('#myRidesTable').html("");
     $('#myRidesTable').html('<thead>'+
@@ -82,7 +81,8 @@ $(function()  {
       '<th scope="col">From</th>'+
       '<th scope="col">To</th>'+
       '<th scope="col">Cost</th>'+
-       '<th scope="col">Passenger Requests</th>'+
+      '<th scope="col">Seats available</th>'+
+      '<th scope="col">Passenger Requests</th>'+
       '<th scope="col">Delete Ride</th>'+
     '</tr>'+
   '</thead>');
@@ -90,6 +90,7 @@ $(function()  {
     try{
         let dupID = [];
       for(let index in maps){
+          console.log(maps);
           if (!dupID.includes(maps[index].ride_id)) {
               //get all requests for this ride
               let requests = maps.filter(e => e.ride_id === maps[index].ride_id);
@@ -104,22 +105,30 @@ $(function()  {
                   "</tr>" +
                   "</thead>" +
                   "<tbody>";
+              let noPassenger= false;
+
               for (let r in requests) {
-                  passengerTable += "<tr>";
-                  passengerTable += "<td>" + requests[r].email+ "</td>";
-                  if (requests[r].accepted == null) {
-                      passengerTable += "<td><div class='btn-group text-nowrap'><button onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
-                      passengerTable += "<button onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
+                  if (requests[r].email != null) {
+                      passengerTable += "<tr>";
+                      passengerTable += "<td>" + requests[r].email+ "</td>";
+                      if (requests[r].accepted == null) {
+                          passengerTable += "<td><div class='btn-group text-nowrap'><button onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
+                          passengerTable += "<button onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
+                      } else {
+                          if (requests[r].accepted == true)
+                              passengerTable += "<td>accepted</td>";
+                          else
+                              passengerTable += "<td>declined</td>";
+
+                      }
                   } else {
-                      if (requests[r].accepted == true)
-                        passengerTable += "<td>accepted</td>";
-                      else
-                          passengerTable += "<td>declined</td>";
-
+                      noPassenger = true;
                   }
-
               }
-              passengerTable += "</tbody></table>";
+              if (noPassenger)
+                  passengerTable = "No requests";
+              else
+                passengerTable += "</tbody></table>";
 
               var ridesTable = document.getElementById("myRidesTable");
               var newRow = ridesTable.insertRow(1);
@@ -127,13 +136,15 @@ $(function()  {
               var startLocCell = newRow.insertCell(1);
               var endLocCell = newRow.insertCell(2);
               var priceCell = newRow.insertCell(3);
-              var passengerCell = newRow.insertCell(4);
-              var deleteCell = newRow.insertCell(5);
+              var seatsCell = newRow.insertCell(4)
+              var passengerCell = newRow.insertCell(5);
+              var deleteCell = newRow.insertCell(6);
 
               dateCell.innerHTML = formatDate(maps[index].ride_date);
               startLocCell.innerHTML = maps[index].start_location;
               endLocCell.innerHTML = maps[index].end_location;
               priceCell.innerHTML = maps[index].price_per_seat;
+              seatsCell.innerHTML = maps[index].available;
               passengerCell.innerHTML = passengerTable;
               deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride_id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
 

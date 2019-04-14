@@ -27,7 +27,7 @@ function insertIntoDB(rideObj) {
 function sendMyRidesToClient(socket){
   let mapObjs = null;
   dbClient.query(
-    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
+    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) LEFT OUTER JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
     (err, res) => {
       if (res) {
         console.log("num rows from getMyRides query " + res.rows.length);
@@ -144,6 +144,15 @@ module.exports = function(passport, server, db) {
         }
       );
     });
+    socket.on("requestAccepted", function(data){
+      console.log("Accepting Request " + data);
+      requestUpdate(data);
+
+    });
+    socket.on("requestDeclined", function(data){
+      console.log("Declining Request " + data);
+      requestUpdate(data);
+    })
 
     socket.on('sendNewMapToServer', function(rideFormData){
       //TODO: get user id from session and store in rideObj
@@ -286,15 +295,27 @@ module.exports = function(passport, server, db) {
       }
 
     })
-    /*---------------
-    Ping temp code
-    -----------------*/
-    socket.on('pingTo', function(name){
-      socket.broadcast.emit('pinged', name);
-    });
-    /*---------------
-    Ping temp code End
-    -----------------*/
+    //Function definitions that need io var
+    function requestUpdate(x){
+      console.log("Request updated for request_id", x, (typeof x));
+      dbClient.query(
+        'SELECT user_id FROM request WHERE request_id=$1',[x],
+        (err, res) => {
+          if (res) {
+            res.rows.forEach((item) => {
+              console.log("Update to " + item.user_id);
+              if (!notificationCenter.includes(item.user_id.toString())) {
+                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                notificationCenter.push(item.user_id.toString());
+              }
+              io.emit('notification', item.user_id);
+            })
+          } else {
+            console.log("there was an error: " + err);
+          }
+        }
+      );
+    }
   });
 
   return router;
