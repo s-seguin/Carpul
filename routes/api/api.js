@@ -114,7 +114,7 @@ module.exports = function(passport, db) {
             (err, dbRes) => {
                 if (dbRes) {
                     if (!err) {
-                        console.log(dbRes);
+                       // console.log(dbRes);
                         res.sendStatus(200);
                     } else {
                         console.log(err.stack);

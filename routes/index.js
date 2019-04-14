@@ -26,7 +26,7 @@ function insertIntoDB(rideObj) {
 function sendMyRidesToClient(socket){
   let mapObjs = null;
   dbClient.query(
-    "SELECT * FROM ride WHERE user_id=$1",[socket.user_id],
+    "SELECT * FROM ride LEFT OUTER JOIN request ON (ride.ride_id = request.ride_id) JOIN account ON (account.user_id = request.user_id) WHERE ride.user_id=$1",[socket.user_id],
     (err, res) => {
       if (res) {
         console.log("num rows from getMyRides query " + res.rows.length);
@@ -59,7 +59,7 @@ function selectAllFromRide() {
   );
 }
 
-// route middleware to make sure a user is logged in
+  // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
   // if user is authenticated in the session, carry on
@@ -99,6 +99,10 @@ module.exports = function(passport, server, db) {
     console.log("New Connection from " + socket.id);
     var readline = require('readline');
     var fs = require('fs');
+
+    socket.on('newRideRequest', (x) => {
+      console.log("New ride request");
+    });
 
     socket.on('sendNewMapToServer', function(rideFormData){
       //TODO: get user id from session and store in rideObj

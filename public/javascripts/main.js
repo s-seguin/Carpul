@@ -71,31 +71,55 @@ $(function()  {
       '<th scope="col">From</th>'+
       '<th scope="col">To</th>'+
       '<th scope="col">Cost</th>'+
+       '<th scope="col">Passenger Requests</th>'+
       '<th scope="col">Delete Ride</th>'+
     '</tr>'+
   '</thead>');
-    i=0;
     console.log("received " + maps.length + " ride the user has been apart of from server");
     try{
+        let dupID = [];
       for(let index in maps){
-        // let pastRide = '<li> ' + maps[index].ride_date + '<br>' +
-        // 'From: ' + maps[index].start_location + "<br>" +
-        // 'To: ' + maps[index].end_location + '<br>' + " Cost: " + maps[index].price_per_seat +
-        // '</li>' + '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" ' +
-        // 'data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '">Delete Ride</a>';
-        // $('#myRidesList').append($(pastRide));
-        var ridesTable = document.getElementById("myRidesTable");
-        var newRow = ridesTable.insertRow(1);
-        var newCell0 = newRow.insertCell(0);
-        var newCell1 = newRow.insertCell(1);
-        var newCell2 = newRow.insertCell(2);
-        var newCell3 = newRow.insertCell(3);
-        var newCell4 = newRow.insertCell(4);
-        newCell0.innerHTML = formatDate(maps[index].ride_date);
-        newCell1.innerHTML = maps[index].start_location;
-        newCell2.innerHTML = maps[index].end_location;
-        newCell3.innerHTML = maps[index].price_per_seat;
-        newCell4.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
+          if (!dupID.includes(maps[index].ride_id)) {
+              //get all requests for this ride
+              let requests = maps.filter(e => e.ride_id === maps[index].ride_id);
+              dupID.push(maps[index].ride_id);
+              //console.log(JSON.stringify(requests));
+              let passengerTable =
+                  "<table>" +
+                  "<thead>" +
+                  "<tr>" +
+                  "<th>email</th>" +
+                  "<th>accept</th>" +
+                  "<th>decline</th>" +
+                  "</tr>" +
+                  "</thead>" +
+                  "<tbody>";
+              for (let r in requests) {
+                  passengerTable += "<tr>";
+                  passengerTable += "<td>" + requests[r].email+ "</td>";
+                  passengerTable += "<td><button>accept</button></td>";
+                  passengerTable += "<td><button>decline</button></td>";
+              }
+              passengerTable += "</tbody></table>";
+
+              var ridesTable = document.getElementById("myRidesTable");
+              var newRow = ridesTable.insertRow(1);
+              var dateCell = newRow.insertCell(0);
+              var startLocCell = newRow.insertCell(1);
+              var endLocCell = newRow.insertCell(2);
+              var priceCell = newRow.insertCell(3);
+              var passengerCell = newRow.insertCell(4);
+              var deleteCell = newRow.insertCell(5);
+
+              dateCell.innerHTML = formatDate(maps[index].ride_date);
+              startLocCell.innerHTML = maps[index].start_location;
+              endLocCell.innerHTML = maps[index].end_location;
+              priceCell.innerHTML = maps[index].price_per_seat;
+              passengerCell.innerHTML = passengerTable;
+              deleteCell.innerHTML = '<a class="Delete_Ride" href=#delete  type="button" data-toggle="modal" data-target="#Delete_RideModal" data-ride-id="' + maps[index].ride_id + '"><button type="button" class="btn btn-danger">Delete</button></a>';
+
+          }
+
       }
     } catch (e){
       console.log(e);

@@ -60,6 +60,7 @@ let myRides = '<div><h3>My Rides: </h3>' +
                 '<th scope="col">From</th>'+
                 '<th scope="col">To</th>'+
                 '<th scope="col">Cost</th>'+
+                '<th scope="col">Passenger Requests</th>' +
                 '<th scope="col">Delete Ride</th>'+
               '</tr>'+
             '</thead> </table>' +
