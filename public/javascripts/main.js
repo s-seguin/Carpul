@@ -17,7 +17,7 @@ $(function()  {
   });
 
   socket.on('sendMapsToClient', function(maps){
-    i=0;
+    let i=0;
     try {
       for (let index in maps) {
         var column =
@@ -73,7 +73,6 @@ $(function()  {
   });
 
   ///Todo: refresh table when ride is accepted or declined
-    //todo: fix bug with only rides with requests showing up
   socket.on('sendMyRidesToClient', function(maps){
     $('#myRidesTable').html("");
     $('#myRidesTable').html('<thead>'+
