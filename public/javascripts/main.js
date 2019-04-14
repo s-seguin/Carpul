@@ -6,6 +6,15 @@ socket.on('connect', function(){
 
 $(function()  {
   console.log('init. Getting maps from server');
+  //Had to move this to the top, or else the notification would get lost during map rendering
+  socket.on('notification', function(data){
+    console.log((typeof data), data, (typeof user_id), user_id);
+    if(data.toString() === user_id){
+      console.log("One of your rides has received an update");
+      $("#NotificationOn").css("display", "");
+      $("#NotificationOff").css("display", "none");
+    }
+  });
 
   socket.on('sendMapsToClient', function(maps){
     i=0;
@@ -171,14 +180,6 @@ $(function()  {
       '</div>'
     $('#exploreRow').prepend($(column));
   });
-  socket.on('notification', function(data){
-    //console.log((typeof data), data, (typeof user_id), user_id);
-    if(data.toString() === user_id){
-      console.log("One of your rides has received a request");
-      $("#NotificationOn").css("display", "");
-      $("#NotificationOff").css("display", "none");
-    }
-  });
 
   $(document).on("click", ".ride-body", function() {
     $('#rideDetailModal').data("ride_id", $(this).data("ride_id"));
@@ -233,6 +234,7 @@ function notificationClicked(){
   $("#NotificationOff").css("display", "");
   $("#NotificationOn").css("display", "none");
   renderMyRides();
+  socket.emit("clearNotification", user_id)
 }
 
 function checkFieldValidation() {
@@ -269,7 +271,7 @@ function checkFieldValidation() {
   let rideDate = dateInput + ' ' + timeInput + ':00';
   let formData = {user_id: user_id, start_location: originInput, end_location: destinationInput,
             capacity: capacity, available: capacity, originPlaceId: originPlaceId, destinationPlaceId : destinationPlaceId,
-           ride_date: rideDate, ride_time: timeInput, created_on: "", price_per_seat: priceInput};
+           ride_date: rideDate, ride_time: timeInput, created_on: Date.now(), price_per_seat: priceInput};
 
   $('#newRideModal').modal('toggle');
   document.getElementById("origin-input").value = '';

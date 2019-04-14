@@ -3,6 +3,7 @@ var router = express.Router();
 
 var dbClient;
 
+let notificationCenter = [];
 
 /***
  * Insert a new ride into the Ride table
@@ -109,6 +110,10 @@ module.exports = function(passport, server, db) {
             console.log(res.rows.length + " Rows received");
             res.rows.forEach((item) => {
               console.log("Ride request to " + item.user_id);
+              if (!notificationCenter.includes(item.user_id.toString())) {
+                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                notificationCenter.push(item.user_id.toString());
+              }
               io.emit('notification', item.user_id);
             })
           } else {
@@ -220,6 +225,12 @@ module.exports = function(passport, server, db) {
       socket.username = data.name;
       socket.user_id = data.user_id;
       console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
+      if (notificationCenter.includes(socket.user_id.toString())) {
+        console.log("user " + socket.user_id + " has an unread notifiaction");
+        socket.emit('notification', socket.user_id);
+      } else {
+        console.log(socket.user_id + " is not in " + notificationCenter);
+      }
     });
     socket.on('getMyRidesFromServer', function(){
       sendMyRidesToClient(socket);
@@ -239,6 +250,17 @@ module.exports = function(passport, server, db) {
         }
       );
     });
+    socket.on("clearNotification", function(data){ //data expected si user_id
+      data = data.toString();
+      let toRemove = notificationCenter.indexOf(data);
+      if (toRemove != -1) {
+        console.log("removing " + notificationCenter[toRemove] + " at index " + toRemove);
+        notificationCenter.splice(toRemove, 1);
+      } else {
+        console.log(data + " is not in " + notificationCenter);
+      }
+
+    })
     /*---------------
     Ping temp code
     -----------------*/
