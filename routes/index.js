@@ -101,7 +101,21 @@ module.exports = function(passport, server, db) {
     var fs = require('fs');
 
     socket.on('newRideRequest', (x) => {
-      console.log("New ride request");
+      console.log("New ride request ride_id", x);
+      dbClient.query(
+        'SELECT user_id FROM ride WHERE ride_id=$1',[x],
+        (err, res) => {
+          if (res) {
+            console.log(res.rows.length + " Rows received");
+            res.rows.forEach((item) => {
+              console.log("Ride request to " + item.user_id);
+              io.emit('notification', item.user_id);
+            })
+          } else {
+            console.log("there was an error: " + err);
+          }
+        }
+      );
     });
 
     socket.on('sendNewMapToServer', function(rideFormData){

@@ -161,6 +161,14 @@ $(function()  {
       '</div>'
     $('#exploreRow').prepend($(column));
   });
+  socket.on('notification', function(data){
+    //console.log((typeof data), data, (typeof user_id), user_id);
+    if(data.toString() === user_id){
+      console.log("One of your rides has received a request");
+      $("#NotificationOn").css("display", "");
+      $("#NotificationOff").css("display", "none");
+    }
+  });
 
   $(document).on("click", ".ride-body", function() {
     $('#rideDetailModal').data("ride_id", $(this).data("ride_id"));
@@ -209,6 +217,12 @@ function postRide() {
   }
   //Here we want to send this object back to server in order for the server to save this route for later
   socket.emit("sendNewMapToServer", returnValues.formData);
+}
+
+function notificationClicked(){
+  $("#NotificationOff").css("display", "");
+  $("#NotificationOn").css("display", "none");
+  renderMyRides();
 }
 
 function checkFieldValidation() {

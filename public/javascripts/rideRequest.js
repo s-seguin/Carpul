@@ -5,7 +5,8 @@ function requestRide() {
         function(returnedData){
             console.log(returnedData);
             if (returnedData === 'OK') {
-                socket.emit('newRideRequest');
+              console.log("requested " + ride_id);
+                socket.emit('newRideRequest', ride_id);
                 alert('Your request was submitted');
             }
             else
