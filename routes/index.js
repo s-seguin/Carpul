@@ -273,14 +273,33 @@ module.exports = function(passport, server, db) {
       console.log("request to delete ride " + data);
       let rideToDelete = data;
       dbClient.query(
-        "DELETE FROM ride WHERE ride_id=$1",[rideToDelete],
+        "SELECT request.user_id FROM ride JOIN request ON (request.ride_id = ride.ride_id) AND (ride.ride_id =$1) JOIN account ON (account.user_id = request.user_id)", [data],
         (err, res) => {
-          if (res) {
-            console.log("Deleted: \n" + JSON.stringify(res));
-            sendMyRidesToClient(socket);
-          } else {
-            console.log("there was an error: " + err);
-          }
+          if(res){
+            console.log(res);
+            res.rows.forEach((item) => {
+              console.log("delete note to " + item.user_id);
+              if (!notificationCenter.includes(item.user_id.toString())) {
+                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                notificationCenter.push(item.user_id.toString());
+              }
+              io.emit('notification', item.user_id);
+            }
+          );
+          dbClient.query(
+            "DELETE FROM ride WHERE ride_id=$1",[rideToDelete],
+            (err, res) => {
+              if (res) {
+                console.log("Deleted: \n" + JSON.stringify(res));
+                sendMyRidesToClient(socket);
+              } else {
+                console.log("there was an error: " + err);
+              }
+            }
+          );
+        }else{
+          console.log(err);
+        }
         }
       );
     });
