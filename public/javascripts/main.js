@@ -17,7 +17,7 @@ $(function()  {
               '<iframe frameborder="0" style="border:0" src="loading.gif" allowfullscreen></iframe>' +
               '<div class="ride-body">' +
                 '<h4>Driver: ' + maps[index].fname+ '</h4>' +
-                '<h5>Departure: ' + maps[index].ride_date + '</h5>' +
+                '<h5>Departure: ' + formatDate(maps[index].ride_date) + '</h5>' +
               '</div>' +
             '</div>' +
           '</div>'
@@ -100,6 +100,11 @@ let destinationPlaceId = "";
 // parameter when you first load the API. For example:
 // <script
 // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+function formatDate(unformattedDate){
+  let dateReceived = new Date(unformattedDate).toString();
+  return dateReceived.slice(0, dateReceived.indexOf("GMT"));
+}
+
 
 function initMap() {
   const mapOptions = {
