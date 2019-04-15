@@ -115,7 +115,7 @@ $(function()  {
                             passengerTable += "<tr>";
                             passengerTable += "<td>" + requests[r].email+ "</td>";
                             if (requests[r].accepted == null) {
-                                passengerTable += "<td><div class='btn-group'><button class='btn btn-xs btn-success' onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
+                                passengerTable += "<td><div><button class='btn btn-xs btn-success' onclick='acceptRequest("+requests[r].request_id+")'>accept</button>";
                                 passengerTable += "<button class='btn btn-xs btn-warning' onclick='declineRequest("+requests[r].request_id+")'>decline</button></div></td>";
                             } else {
                                 if (requests[r].accepted == true)
