@@ -166,6 +166,8 @@ $(function()  {
         $('#passengerRideTable').html('<thead>'+
             '<tr>'+
             '<th scope="col">Ride Time</th>'+
+            '<th scope="col">Driver</th>'+
+            '<th scope="col">Driver Email</th>'+
             '<th scope="col">From</th>'+
             '<th scope="col">To</th>'+
             '<th scope="col">Cost</th>'+
@@ -178,12 +180,16 @@ $(function()  {
                 var passengerTable = document.getElementById("passengerRideTable");
                 var newRow = passengerTable.insertRow(1);
                 var dateCell = newRow.insertCell(0);
-                var startLocCell = newRow.insertCell(1);
-                var endLocCell = newRow.insertCell(2);
-                var priceCell = newRow.insertCell(3);
-                var statusCell = newRow.insertCell(4);
+                var nameCell = newRow.insertCell(1)
+                var emailCell = newRow.insertCell(2)
+                var startLocCell = newRow.insertCell(3);
+                var endLocCell = newRow.insertCell(4);
+                var priceCell = newRow.insertCell(5);
+                var statusCell = newRow.insertCell(6);
 
                 dateCell.innerHTML = formatDate(passengerFile[index].ride_date);
+                nameCell.innerHTML = passengerFile[index].fname + " " + passengerFile[index].lname;
+                emailCell.innerHTML = passengerFile[index].email;
                 startLocCell.innerHTML = passengerFile[index].start_location;
                 endLocCell.innerHTML = passengerFile[index].end_location;
                 priceCell.innerHTML = passengerFile[index].price_per_seat;

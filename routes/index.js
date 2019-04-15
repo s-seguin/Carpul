@@ -50,7 +50,7 @@ function sendMyRidesToClient(socket){
 function sendMyPassengerRidesToClient(socket){
   let passengerObjs = null;
   dbClient.query(
-    "SELECT * FROM request JOIN account ON (account.user_id = request.user_id) JOIN ride ON (request.ride_id = ride.ride_id) WHERE request.user_id=$1",[socket.user_id],
+    "SELECT ride.ride_date, ride.start_location, ride.end_location, ride.price_per_seat, request.accepted, account.email, account.fname, account.lname FROM request JOIN ride ON (request.ride_id = ride.ride_id) JOIN account on (ride.user_id=account.user_id) WHERE request.user_id=$1",[socket.user_id],
     (err, res) => {
       if (res) {
         console.log("num rows from getMyPassengerRides query " + res.rows.length);
