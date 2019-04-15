@@ -37,6 +37,7 @@ let myAccount =
     '        <div>\n' +
     '            <h4>Account Details</h4>\n' +
     '        </div>\n' +
+    '        <div class="border" id="account-div">\n' +
     '        <div class="col-sm-4" id="user-page-pic">\n' +
     '            <img id="accountPic" src="images/passenger.png">\n' +
     '        </div>\n' +
@@ -48,6 +49,7 @@ let myAccount =
     '                <span class="account-info" id="user-page-lname"> Last Name: <p class="account-info-box" name="account-info-lname" >'+ lname +'</p></span>\n' +
     '                <span class="account-info" id="user-page-phone"> Phone Number: <p class="account-info-box" name="account-info-phone" >'+ phone +'</p></span>\n' +
     '            </div>\n' +
+    '        </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
     '</div>';
