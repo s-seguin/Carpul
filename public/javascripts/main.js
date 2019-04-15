@@ -235,7 +235,7 @@ $(function()  {
             '" allowfullscreen></iframe>' +
             '<div class="ride-body" type="button" data-ride_id="' + rideObj.ride_id +
             '" data-toggle="modal" data-target="#rideDetailModal">' +
-            '<h4>Driver: ' + name + '</h4>' +
+            '<h4>Driver: ' + rideObj.fname + '</h4>' +
             '<h5>Departure: ' + formatDate(rideObj.ride_date) + '</h5>' +
             '</div>' +
             '</div>' +

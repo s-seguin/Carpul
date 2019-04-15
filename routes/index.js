@@ -152,15 +152,13 @@ module.exports = function(passport, server, db) {
       insertIntoDB(rideObj);
 
       dbClient.query(
-          'SELECT r.ride_id FROM ride r INNER JOIN (' +
-              'SELECT MAX(created_on) created_on FROM ride' +
-          ') c ON r.created_on=c.created_on ' +
-          'WHERE r.embedded_map=$1', [rideObj.embedded_map],
+          'SELECT r.ride_id, account.fname FROM ride r INNER JOIN (SELECT MAX(created_on) created_on FROM ride) c ON r.created_on=c.created_on JOIN account on (account.user_id=r.user_id) WHERE r.embedded_map=$1', [rideObj.embedded_map],
           (err, res) => {
             if (res) {
               res.rows.forEach((item) => {
                 rideObj.ride_id = item.ride_id;
-                console.log("sending: " + JSON.stringify(rideObj));
+                rideObj.fname = item.fname;
+               // console.log("sending: " + JSON.stringify(rideObj));
                 io.emit('sendEmbeddedMap', rideObj);
               });
             } else {
