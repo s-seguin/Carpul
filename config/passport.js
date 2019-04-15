@@ -108,7 +108,7 @@ module.exports = function (passport, dbClient) {
                                     [email, password, additionalData[1], additionalData[2], additionalData[3]],
                                     (err, res) => {
                                         if (res) {
-                                            console.log(res);
+                                            //console.log(res);
                                             var user = {
                                                 email: email,
                                                 password: password,

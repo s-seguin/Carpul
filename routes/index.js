@@ -196,7 +196,7 @@ module.exports = function(passport, server, db) {
 
     //populate detail card for ride
     socket.on('getInfoForCard', function(rideId) {
-      console.log(rideId);
+      //console.log(rideId);
       dbClient.query(
         "SELECT r.* FROM ride r WHERE r.ride_id=$1", [rideId],
         (err, res) => {
@@ -219,16 +219,16 @@ module.exports = function(passport, server, db) {
           "SELECT r.*, a.fname FROM ride r INNER JOIN account a ON r.user_id=a.user_id WHERE r.ride_date >= $1 and r.available > 0",[timeOfQuery],
           (err, res) => {
             if (res) {
-              console.log("num rows from query " + res.rows.length);
+              //console.log("num rows from query " + res.rows.length);
               mapObjs = [];
               res.rows.forEach((item) => {
                 mapObjs.push(item);
               });
-              console.log("Sending " + mapObjs.length + " maps");
+              //console.log("Sending " + mapObjs.length + " maps");
               socket.emit('sendMapsToClientSearch', mapObjs);
             } else {
-              console.log("there was an error: " + err);
-              console.log(mapObjs);
+             // console.log("there was an error: " + err);
+              //console.log(mapObjs);
               socket.emit('sendMapsToClientSearch', mapObjs);
             }
           }
@@ -238,12 +238,12 @@ module.exports = function(passport, server, db) {
       });
 
     socket.on('register', function(data){
-      console.log('Register event. User_id ' + data.user_id + " is " + data.name);
+      //console.log('Register event. User_id ' + data.user_id + " is " + data.name);
       socket.username = data.name;
       socket.user_id = data.user_id;
-      console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
+      //console.log("now stored in the socket: " + socket.user_id + " is " + socket.username );
       if (notificationCenter.includes(socket.user_id.toString())) {
-        console.log("user " + socket.user_id + " has an unread notifiaction");
+        //console.log("user " + socket.user_id + " has an unread notifiaction");
         socket.emit('notification', socket.user_id);
       } else {
         console.log(socket.user_id + " is not in " + notificationCenter);
@@ -256,17 +256,17 @@ module.exports = function(passport, server, db) {
       sendMyPassengerRidesToClient(socket);
     });
     socket.on("deleteRide", function(data){
-      console.log("request to delete ride " + data);
+      //console.log("request to delete ride " + data);
       let rideToDelete = data;
       dbClient.query(
         "SELECT request.user_id FROM ride JOIN request ON (request.ride_id = ride.ride_id) AND (ride.ride_id =$1) JOIN account ON (account.user_id = request.user_id)", [data],
         (err, res) => {
           if(res){
-            console.log(res);
+            //console.log(res);
             res.rows.forEach((item) => {
-              console.log("delete note to " + item.user_id);
+              //console.log("delete note to " + item.user_id);
               if (!notificationCenter.includes(item.user_id.toString())) {
-                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                //console.log("User " + item.user_id + " is not in the notification center, Adding them");
                 notificationCenter.push(item.user_id.toString());
               }
               io.emit('notification', item.user_id);
@@ -276,7 +276,7 @@ module.exports = function(passport, server, db) {
             "DELETE FROM ride WHERE ride_id=$1",[rideToDelete],
             (err, res) => {
               if (res) {
-                console.log("Deleted: \n" + JSON.stringify(res));
+                //console.log("Deleted: \n" + JSON.stringify(res));
                 sendMyRidesToClient(socket);
               } else {
                 console.log("there was an error: " + err);
@@ -293,24 +293,24 @@ module.exports = function(passport, server, db) {
       data = data.toString();
       let toRemove = notificationCenter.indexOf(data);
       if (toRemove != -1) {
-        console.log("removing " + notificationCenter[toRemove] + " at index " + toRemove);
+        //console.log("removing " + notificationCenter[toRemove] + " at index " + toRemove);
         notificationCenter.splice(toRemove, 1);
       } else {
-        console.log(data + " is not in " + notificationCenter);
+        //console.log(data + " is not in " + notificationCenter);
       }
 
     })
     //Function definitions that need io var
     function requestUpdate(x){
-      console.log("Request updated for request_id", x, (typeof x));
+      //console.log("Request updated for request_id", x, (typeof x));
       dbClient.query(
         'SELECT user_id FROM request WHERE request_id=$1',[x],
         (err, res) => {
           if (res) {
             res.rows.forEach((item) => {
-              console.log("Update to " + item.user_id);
+              //console.log("Update to " + item.user_id);
               if (!notificationCenter.includes(item.user_id.toString())) {
-                console.log("User " + item.user_id + " is not in the notification center, Adding them");
+                //console.log("User " + item.user_id + " is not in the notification center, Adding them");
                 notificationCenter.push(item.user_id.toString());
               }
               io.emit('notification', item.user_id);
