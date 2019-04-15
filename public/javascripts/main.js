@@ -243,7 +243,7 @@ $(function()  {
         $('#exploreRow').prepend($(column));
     });
 
-    $(document).on("click", ".ride-body", function() {
+    $(document).on("click touchstart", ".ride-body", function() {
         $('#rideDetailModal').data("ride_id", $(this).data("ride_id"));
 
         socket.emit('getInfoForCard', $(this).data("ride_id"));
